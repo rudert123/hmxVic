@@ -1,6 +1,147 @@
-setfpscap(240)
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/Snxdfer/CustomOrionLib/main/Library.lua')))()
-local Window = OrionLib:MakeWindow({Name = "Blade Ball", HidePremium = false, IntroText = "Blade Ball", SaveConfig = false, ConfigFolder = "Blade Ball v1.0.0"})
+local Players = game:GetService("Players")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.BackgroundColor3 = Color3.fromRGB(0, 20, 40)
+textLabel.Font = Enum.Font.GothamMedium
+textLabel.TextColor3 = Color3.new(0.5, 0.5, 0.5)
+textLabel.Text = "Loading..."
+textLabel.TextSize = 28
+textLabel.Parent = screenGui
+
+local loadingRing = Instance.new("ImageLabel")
+loadingRing.Size = UDim2.new(0, 256, 0, 256)
+loadingRing.BackgroundTransparency = 1
+loadingRing.Image = "rbxassetid://4965945816"
+loadingRing.AnchorPoint = Vector2.new(0.5, 0.5)
+loadingRing.Position = UDim2.new(0.5, 0, 0.5, 0)
+loadingRing.Parent = screenGui
+
+-- Remove the default loading screen
+ReplicatedFirst:RemoveDefaultLoadingScreen()
+
+local tweenInfo = TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1)
+local tween = TweenService:Create(loadingRing, tweenInfo, {Rotation = 360})
+tween:Play()
+
+task.wait(5)  -- Force screen to appear for a minimum number of seconds
+
+if not game:IsLoaded() then
+ game.Loaded:Wait()
+end
+
+screenGui:Destroy()
+
+--// Vico (Rudert) Recode
+print("Script not yet released and this is a tester, for testers.")
+wait(2)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "LoadingScreen"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.6
+frame.Parent = screenGui
+
+local uiGradient = Instance.new("UIGradient")
+uiGradient.Parent = frame
+uiGradient.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0), Color3.fromRGB(50, 50, 50))
+uiGradient.Rotation = 45
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Text = "Own : Rudert and Flezzpe"
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.TextSize = 50
+textLabel.TextStrokeTransparency = 0.6
+textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+textLabel.TextWrapped = true
+textLabel.Size = UDim2.new(0, 550, 0, 200)
+textLabel.Position = UDim2.new(0.5, -250, 0.5, -75)
+textLabel.TextXAlignment = Enum.TextXAlignment.Center
+textLabel.TextYAlignment = Enum.TextYAlignment.Center
+textLabel.Parent = frame
+
+local border = Instance.new("UICorner")
+border.CornerRadius = UDim.new(0, 10)
+border.Parent = textLabel
+
+local shadow = Instance.new("Frame")
+shadow.Size = UDim2.new(1, 6, 1, 6)
+shadow.Position = UDim2.new(0, 3, 0, 3)
+shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+shadow.BackgroundTransparency = 0.5
+shadow.ZIndex = textLabel.ZIndex - 1
+shadow.Parent = textLabel
+
+local tweenService = game:GetService("TweenService")
+
+local fadeInTweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+local fadeInTween = tweenService:Create(textLabel, fadeInTweenInfo, {TextTransparency = 0, Position = UDim2.new(0.5, -250, 0.5, -75)})
+
+local moveUpTweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+local moveUpTween = tweenService:Create(textLabel, moveUpTweenInfo, {Position = UDim2.new(0.5, -250, 0.5, -150)})
+
+local fadeOutTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+local fadeOutTween = tweenService:Create(textLabel, fadeOutTweenInfo, {TextTransparency = 1})
+
+fadeInTween:Play()
+
+fadeInTween.Completed:Connect(function()
+    wait(1)
+    moveUpTween:Play()
+
+    moveUpTween.Completed:Connect(function()
+        fadeOutTween:Play()
+
+        fadeOutTween.Completed:Connect(function()
+            screenGui:Destroy()
+        end)
+    end)
+end)
+
+local Notification = NothingLibrary.Notification();
+
+Notification.new({
+	Title = "Notification",
+	Description = "Blade Ball",
+	Duration = 5,
+	Icon = "rbxassetid://8997385628"
+})
+
+wait(2)
+
+local version = "Test Version"
+
+-- Notification for version and information
+NothingLibrary.Notification.new({
+	Title = "Vico llc. Ax'Vx",
+	Description = "All Rights Reserved\n" .. version,
+	Duration = 5,
+	Icon = "rbxassetid://8997385628"  -- Optional icon
+})
+
+wait(2)
+
+-- Warning as notification
+NothingLibrary.Notification.new({
+	Title = "Beta Version Warning",
+	Description = "Not available for all. This is a beta version...",
+	Duration = 5,
+	Icon = "rbxassetid://8997385628",  -- Optional icon
+	Color = Color3.fromRGB(255, 0, 0)  -- Red color for warning
+})
 
 spawn(function()
     while true do
@@ -250,202 +391,197 @@ workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
 
 end)
 
---script begin
+local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))();
 
-local Tab = Window:MakeTab({
-	Name = "Main",
-	Icon = "rbxassetid://13014537525",
-	PremiumOnly = false
+local Windows = NothingLibrary.new({
+	Title = "Vico X Nurysium",
+	Description = "will this be a bummer 😱",
+	Keybind = Enum.KeyCode.LeftControl,
+	Logo = 'http://www.roblox.com/asset/?id=18898582662'
 })
-local Section = Tab:AddSection({
-	Name = "Main Section"
+
+-- Main Tab
+local TabFrame = Windows:NewTab({
+	Title = "Main",
+	Description = "Main Controls",
+	Icon = "rbxassetid://13014537525"
 })
-Tab:AddToggle({
-	Name = "Auto Parry (BETA)",
+
+local Section = TabFrame:NewSection({
+	Title = "Main Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Auto Parry (Still Fixing)",
 	Default = false,
 	Callback = function(toggled)
-	  resolve_parry_Remote()
-      getgenv().aura_Enabled = toggled
-	end    
-})
-Tab:AddToggle({
-	Name = "Hit Sound",
-	Default = false,
-	Callback = function(toggled)
-	  resolve_parry_Remote()
-      getgenv().hit_sound_Enabled = toggled
-	end    
-})
-Tab:AddToggle({
-	Name = "Spectate Ball",
-	Default = false,
-	Callback = function(toggled)
-	  resolve_parry_Remote()
-      getgenv().spectate_Enabled = toggled
+		resolve_parry_Remote()
+		getgenv().aura_Enabled = toggled
 	end    
 })
 
-local Tab = Window:MakeTab({
-	Name = "Misc",
-	Icon = "rbxassetid://7733920317",
-	PremiumOnly = false
-})
-local Section = Tab:AddSection({
-	Name = "Misc Section"
-})
-Tab:AddToggle({
-	Name = "Hit Effect",
+Section:NewToggle({
+	Title = "Hit Sound",
 	Default = false,
 	Callback = function(toggled)
-        getgenv().hit_effect_Enabled = toggled
-	end    
-})
-Tab:AddToggle({
-	Name = "Kill Effect",
-	Default = false,
-	Callback = function(toggled)
-        getgenv().kill_effect_Enabled = toggled
-	end    
-})
-Tab:AddToggle({
-	Name = "Trail",
-	Default = false,
-	Callback = function(toggled)
-        getgenv().trail_Enabled = toggled
+		resolve_parry_Remote()
+		getgenv().hit_sound_Enabled = toggled
 	end    
 })
 
-local Tab = Window:MakeTab({
-	Name = "Visual",
-	Icon = "rbxassetid://7733774602",
-	PremiumOnly = false
-})
-local Section = Tab:AddSection({
-	Name = "Visual Section"
+Section:NewToggle({
+	Title = "Spectate Ball",
+	Default = false,
+	Callback = function(toggled)
+		resolve_parry_Remote()
+		getgenv().spectate_Enabled = toggled
+	end    
 })
 
-Tab:AddButton({
-	Name = "Visualizer",
+-- Misc Tab
+local TabFrame = Windows:NewTab({
+	Title = "Misc",
+	Description = "Miscellaneous Features",
+	Icon = "rbxassetid://7733920317"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Misc Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Hit Effect",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().hit_effect_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Kill Effect",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().kill_effect_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Trail",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().trail_Enabled = toggled
+	end    
+})
+
+-- Visual Tab
+local TabFrame = Windows:NewTab({
+	Title = "Visual",
+	Description = "Visual Settings",
+	Icon = "rbxassetid://7733774602"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Visual Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Visualizer",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().visualize_Enabled = toggled
+	end
+})
+
+Section:NewButton({
+	Title = "Draggable Keystrokes (PC)",
 	Callback = function()
-        getgenv().disableVisualizer = false
-        getgenv().debugCurved = false
-        getgenv().disable = false
-        getgenv().disableVisualizer = false
-        getgenv().curveRestriction = 14.8
-        loadstring(game:HttpGet("https://pastebin.com/raw/2RzCXHZH"))()
-  	end    
-})
-Tab:AddButton({
-	Name = "Draggable Keystrokes (PC)",
-	Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/aXC5KJuj"))()
-  	end    
-})
-Tab:AddToggle({
-	Name = "Night Mode",
-	Default = false,
-	Callback = function(toggled)
-        getgenv().night_mode_Enabled = toggled
+		loadstring(game:HttpGet("https://pastebin.com/raw/aXC5KJuj"))()
 	end    
 })
 
-local Tab = Window:MakeTab({
-	Name = "Client",
-	Icon = "rbxassetid://7734053426",
-	PremiumOnly = false
-})
-local Section = Tab:AddSection({
-	Name = "Client Section"
-})
-
-Tab:AddButton({
-	Name = "Anti Lag",
-	Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/1RfvPdwX"))()
-  	end    
-})
-Tab:AddButton({
-	Name = "FPS Boost",
-	Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/4HrJUmwd"))()
-  	end    
+Section:NewToggle({
+	Title = "Night Mode",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().night_mode_Enabled = toggled
+	end    
 })
 
-local Tab = Window:MakeTab({
-	Name = "Crates",
-	Icon = "rbxassetid://7733964370",
-	PremiumOnly = false
+-- Client Tab
+local TabFrame = Windows:NewTab({
+	Title = "Client",
+	Description = "Client Performance",
+	Icon = "rbxassetid://7734053426"
 })
-local Section = Tab:AddSection({
-	Name = "Crates Section"
+
+local Section = TabFrame:NewSection({
+	Title = "Client Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
 })
-Tab:AddButton({
-	Name = "Buy Sword Crate",
+
+Section:NewButton({
+	Title = "Anti Lag",
 	Callback = function()
-            game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
-  	end    
+		loadstring(game:HttpGet("https://pastebin.com/raw/1RfvPdwX"))()
+	end    
 })
-Tab:AddButton({
-	Name = "Buy Explosion Crate",
+
+Section:NewButton({
+	Title = "FPS Boost",
 	Callback = function()
-        game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
-  	end    
+		loadstring(game:HttpGet("https://pastebin.com/raw/4HrJUmwd"))()
+	end    
 })
-Tab:AddToggle({
-	Name = "Auto Buy Sword Crate",
+
+-- Crates Tab
+local TabFrame = Windows:NewTab({
+	Title = "Crates",
+	Description = "Crate Purchases",
+	Icon = "rbxassetid://7733964370"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Crates Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewButton({
+	Title = "Buy Sword Crate",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
+	end    
+})
+
+Section:NewButton({
+	Title = "Buy Explosion Crate",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
+	end    
+})
+
+Section:NewToggle({
+	Title = "Auto Buy Sword Crate",
 	Default = false,
 	Callback = function(state)
-        getgenv().ASC = state
+		getgenv().ASC = state
 	end    
 })
-Tab:AddToggle({
-	Name = "Auto Buy Explosion Crate",
+
+Section:NewToggle({
+	Title = "Auto Buy Explosion Crate",
 	Default = false,
 	Callback = function(state)
-        getgenv().AEC = state
+		getgenv().AEC = state
 	end    
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 --// kill effect
 
@@ -486,15 +622,6 @@ task.defer(function()
         end
     end)
 end)
-
-
-
-
-
-
-
-
-
 
 --// self effect
 
@@ -617,188 +744,314 @@ task.defer(function()
 
 end)
 
+--// AI
+
+task.defer(function()
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if getgenv().ai_Enabled and workspace.Alive:FindFirstChild(local_player.Character.Name) then
+            local self = Nurysium_Util.getBall()
+
+            if not self or not closest_Entity then
+                return
+            end
+
+            if not closest_Entity:FindFirstChild('HumanoidRootPart') then
+                walk_to(local_player.Character.HumanoidRootPart.Position + Vector3.new(math.sin(tick()) * math.random(35, 50), 0, math.cos(tick()) * math.random(35, 50)))
+                return
+            end
+
+            local ball_Position = self.Position
+            local ball_Speed = self.AssemblyLinearVelocity.Magnitude
+            local ball_Distance = local_player:DistanceFromCharacter(ball_Position)
+
+            local player_Position = local_player.Character.PrimaryPart.Position
+
+            local target_Position = closest_Entity.HumanoidRootPart.Position
+            local target_Distance = local_player:DistanceFromCharacter(target_Position)
+            local target_LookVector = closest_Entity.HumanoidRootPart.CFrame.LookVector
+
+            local resolved_Position = Vector3.zero
+
+            local target_Humanoid = closest_Entity:FindFirstChildOfClass("Humanoid")
+            if target_Humanoid and target_Humanoid:GetState() == Enum.HumanoidStateType.Jumping and local_player.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+                local_player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+
+            if (ball_Position - player_Position):Dot(local_player.Character.PrimaryPart.CFrame.LookVector) < -0.2 and tick() % 4 <= 2 then
+                return
+            end
+
+            if tick() % 4 <= 2 then
+                if target_Distance > 10 then
+                    resolved_Position = target_Position + (player_Position - target_Position).Unit * 8
+                else
+                    resolved_Position = target_Position + (player_Position - target_Position).Unit * 25
+                end
+            else
+                resolved_Position = target_Position - target_LookVector * (math.random(8.5, 13.5) + (ball_Distance / math.random(8, 20)))
+            end
+
+            if (player_Position - target_Position).Magnitude < 8 then
+                resolved_Position = target_Position + (player_Position - target_Position).Unit * 35
+            end
+
+            if ball_Distance < 8 then
+                resolved_Position = player_Position + (player_Position - ball_Position).Unit * 10
+            end
+
+            if aura.is_spamming then
+                resolved_Position = player_Position + (ball_Position - player_Position).Unit * 10
+            end
+
+            walk_to(resolved_Position + Vector3.new(math.sin(tick()) * 10, 0, math.cos(tick()) * 10))
+        end
+    end)
+end)
+
+
+ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
+	aura.hit_Count += 1
+
+	task.delay(0.185, function()
+		aura.hit_Count -= 1
+	end)
+end)
+
 task.spawn(function()
+    local previousPosition = Vector3.zero  -- Awal yang aman untuk posisi
+    local previousTime = tick()
 
     RunService.PreRender:Connect(function()
-
         if not getgenv().aura_Enabled then
-
             return
-
         end
 
         if closest_Entity then
+            -- Pastikan closest_Entity ada di workspace
+            local entity = workspace.Alive:FindFirstChild(closest_Entity.Name)
+            if entity and entity:FindFirstChild("HumanoidRootPart") then
+                if aura.is_spamming then
+                    local currentPosition = entity.HumanoidRootPart.Position
+                    local currentTime = tick()
 
-            if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
+                    local deltaPosition = currentPosition - previousPosition
+                    local deltaTime = currentTime - previousTime
 
-                if aura_table.is_Spamming then
+                    local speed = deltaTime > 0 and deltaPosition.Magnitude / deltaTime or 0  -- Kecepatan (studs per detik)
 
-                    if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then   
+                    -- Menyesuaikan waktu spam berdasarkan ping
+                    local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10  -- Mengambil nilai ping (dalam ms)
+                    local adjustedSpamDelay = math.max(0.1, 0.5 - ping / 1000)  -- Menyesuaikan delay spam berdasarkan ping
 
+                    -- Validasi jarak sebelum FireServer
+                    if local_player:DistanceFromCharacter(currentPosition) <= aura.spam_Range then
                         parry_remote:FireServer(
-
-                            0.5,
-
+                            speed,  -- Mengirim kecepatan ke server
                             CFrame.new(camera.CFrame.Position, Vector3.zero),
-
-                            {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-
-                            {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-
+                            {[closest_Entity.Name] = currentPosition},
+                            {currentPosition.X, currentPosition.Y},
                             false
-
                         )
 
+                        -- Update posisi dan waktu untuk frame berikutnya
+                        previousPosition = currentPosition
+                        previousTime = currentTime
+
+                        -- Menunda eksekusi spam sesuai dengan delay yang disesuaikan
+                        task.wait(adjustedSpamDelay)
                     end
-
                 end
-
             end
-
         end
-
     end)
 
-    RunService.Heartbeat:Connect(function()
+	RunService.PreRender:Connect(function()
+		if not getgenv().aura_Enabled then
+			return
+		end
 
-        if not getgenv().aura_Enabled then
+		workspace:WaitForChild("Balls").ChildRemoved:Once(function(child)
+			aura.hit_Count = 0
+			aura.is_ball_Warping = false
+			aura.is_spamming = false
+			aura.can_parry = true
+			aura.last_target = nil
+		end)
 
-            return
+		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 100
 
+		local self = Nurysium_Util.getBall()
+
+		if not self then
+			return
+		end
+
+		self:GetAttributeChangedSignal('target'):Once(function()
+			aura.can_parry = true
+		end)
+
+		self:GetAttributeChangedSignal('from'):Once(function()
+			aura.last_target = workspace.Alive:FindFirstChild(self:GetAttribute('from'))
+		end)
+
+		if self:GetAttribute('target') ~= local_player.Name or not aura.can_parry then
+			return
+		end
+
+		get_closest_entity(local_player.Character.PrimaryPart)
+
+		local player_Position = local_player.Character.PrimaryPart.Position
+		local player_Velocity = local_player.Character.HumanoidRootPart.AssemblyLinearVelocity
+		local player_isMoving = player_Velocity.Magnitude > 0
+
+		local ball_Position = self.Position
+		local ball_Velocity = self.AssemblyLinearVelocity
+
+		if self:FindFirstChild('zoomies') then
+			ball_Velocity = self.zoomies.VectorVelocity
+		end
+
+		local ball_Direction = (local_player.Character.PrimaryPart.Position - ball_Position).Unit
+		local ball_Distance = local_player:DistanceFromCharacter(ball_Position)
+		local ball_Dot = ball_Direction:Dot(ball_Velocity.Unit)
+		local ball_Speed = ball_Velocity.Magnitude
+		local ball_speed_Limited = math.min(ball_Speed / 1000, 0.1)
+
+		local target_Position = closest_Entity.HumanoidRootPart.Position
+		local target_Distance = local_player:DistanceFromCharacter(target_Position)
+		local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
+		local target_Direction = (local_player.Character.PrimaryPart.Position - closest_Entity.HumanoidRootPart.Position).Unit
+		local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
+		local target_isMoving = target_Velocity.Magnitude > 0
+		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
+
+                aura.spam_Range = math.max(ping / 10, 10.5) + ball_Speed / 6.15
+		speedFactor = 3 - (ping / 100)
+    speedFactorPingBased = 6.1 - (ping / 100)
+    aura.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
+
+		if target_isMoving then
+            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11 and ball_Distance < 10)) and ball_Dot > -0.25
+        else
+            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11.5 and ball_Distance < 10))
         end
 
-        local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
+		if ball_Dot < -0.2 then
+			aura.ball_Warping = tick()
+		end
 
-        local self = Nurysium_Util.getBall()
+		task.spawn(function()
+			if (tick() - aura.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance < 10 then
+				aura.is_ball_Warping = false
+				return
+			end
 
-        if not self then
+			if (ball_Position - aura.last_target.HumanoidRootPart.Position).Magnitude > 35.5 or target_Distance <= 12 then
+				aura.is_ball_Warping = false
+				return
+			end
 
-            return
+			aura.is_ball_Warping = true
+		end)
 
-        end
+		if ball_Distance <= aura.parry_Range and not aura.is_ball_Warping and ball_Dot > -0.1 then
 
-        self:GetAttributeChangedSignal('target'):Once(function()
+local cf = camera.CFrame
 
-            aura_table.canParry = true
-
-        end)
-
-        if self:GetAttribute('target') ~= local_player.Name or not aura_table.canParry then
-
-            return
-
-        end
-
-        get_closest_entity(local_player.Character.PrimaryPart)
-
-        local player_Position = local_player.Character.PrimaryPart.Position
-
-        local ball_Position = self.Position
-
-        local ball_Velocity = self.AssemblyLinearVelocity
-
-        if self:FindFirstChild('zoomies') then
-
-            ball_Velocity = self.zoomies.VectorVelocity
-
-        end
-
-        local ball_Direction = (local_player.Character.PrimaryPart.Position - ball_Position).Unit
-
-        local ball_Distance = local_player:DistanceFromCharacter(ball_Position)
-
-        local ball_Dot = ball_Direction:Dot(ball_Velocity.Unit)
-
-        local ball_Speed = ball_Velocity.Magnitude
-
-        local ball_speed_Limited = math.min(ball_Speed / 1000, 0.1)
-
-        local ball_predicted_Distance = (ball_Distance - ping / 15.5) - (ball_Speed / 3.5)
-
-        local target_Position = closest_Entity.HumanoidRootPart.Position
-
-        local target_Distance = local_player:DistanceFromCharacter(target_Position)
-
-        local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
-
-        local target_Direction = (local_player.Character.PrimaryPart.Position - closest_Entity.HumanoidRootPart.Position).Unit
-
-        local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
-
-        local target_isMoving = target_Velocity.Magnitude > 0
-
-        local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
-
-        aura_table.spam_Range = math.max(ping / 10, 15) + ball_Speed / 7
-
-        aura_table.parry_Range = math.max(math.max(ping, 4) + ball_Speed / 3.5, 9.5)
-
-        aura_table.is_Spamming = aura_table.hit_Count > 1 or ball_Distance < 13.5
-
-        if ball_Dot < -0.2 then
-
-            aura_table.ball_Warping = tick()
-
-        end
-
-        task.spawn(function()
-
-            if (tick() - aura_table.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance <= 10 then
-
-                aura_table.is_ball_Warping = false
-
-                return
-
-            end
-
-            aura_table.is_ball_Warping = true
-
-        end)
-
-        if ball_Distance <= aura_table.parry_Range and not aura_table.is_Spamming and not aura_table.is_ball_Warping then
-
+            if getgenv().auto_curve_Enabled then
+    parry_remote:FireServer(
+        0,
+        CFrame.new(camera.CFrame.Position, Vector3.new(
+            math.random(-1000, 1000),
+            math.random(0, 1000),
+            math.random(100, 1000)
+        )),
+        {[closest_Entity.Name] = target_Position},
+        {target_Position.X, target_Position.Y},
+        false
+    )
+else
+        local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
             parry_remote:FireServer(
-
                 0,
-
-                CFrame.new(camera.CFrame.Position, Vector3.new(math.random(0, 100), math.random(0, 1000), math.random(100, 1000))),
-
-                {[closest_Entity.Name] = target_Position},
-
+                CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                {[closest_Entity.Name] = targetPosition},
                 {target_Position.X, target_Position.Y},
-
                 false
-
             )
+end
 
-            aura_table.canParry = false
+			aura.can_parry = false
+			aura.hit_Time = tick()
+			aura.hit_Count += 1
 
-            aura_table.hit_Time = tick()
+			task.delay(0.2, function()
+				aura.hit_Count -= 1
+			end)
+		end
 
-            aura_table.hit_Count += 1
+		task.spawn(function()
+			repeat
+				RunService.PreRender:Wait()
+			until (tick() - aura.hit_Time) >= 1
+			    aura.can_parry = true
+		end)
+	end)
+end)
 
-            task.delay(0.15, function()
+initializate('nurysium_temp')
 
-                aura_table.hit_Count -= 1
+local self = Nurysium_Util.getBall()
+	wait(0.1)
+	local Visualize = Instance.new("Part",workspace)
+	local Visualize1 = Instance.new("Part",workspace)
+	wait(0.5)
+	Visualize.Color = Color3.new(0, 0, 0)
+	Visualize.Material = Enum.Material.ForceField
+	Visualize.Transparency = 0.5
+	Visualize.Anchored = true
+	Visualize.CanCollide = false
+	Visualize.CastShadow = false
+	Visualize.Shape = Enum.PartType.Ball
+	Visualize.Size = Vector3.new(30,30,30)
+	Visualize1.Color = Color3.new(1, 0, 0)
+	Visualize1.Material = Enum.Material.ForceField
+	Visualize1.Transparency = 0.5
+	Visualize1.Anchored = true
+	Visualize1.CanCollide = false
+	Visualize1.CastShadow = false
+	Visualize1.Shape = Enum.PartType.Ball
+	Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
 
-            end)
-
-        end
-
-        task.spawn(function()
-
-            repeat
-
-                RunService.Heartbeat:Wait()
-
-            until (tick() - aura_table.hit_Time) >= 1
-
-                aura_table.canParry = true
-
-        end)
-
-    end)
-
+	local Highlight1 = Instance.new("Highlight")
+	Highlight1.Parent = Visualize1
+	Highlight1.Enabled = true
+	Highlight1.FillTransparency = 0
+	Highlight1.OutlineColor = Color3.new(1, 1, 1)
+	local Highlight = Instance.new("Highlight")
+	Highlight.Parent = Visualize
+	Highlight.Enabled = true
+	Highlight.FillTransparency = 0
+	Highlight.OutlineColor = Color3.new(1, 1, 1)
+	
+task.spawn(function()
+RunService.RenderStepped:Connect(function()
+		if getgenv().visualize_Enabled then
+			Visualize.Transparency = 0
+			Visualize.Material = Enum.Material.ForceField
+			Visualize.Size = Vector3.new(aura.parry_Range, aura.parry_Range, aura.parry_Range)
+			Visualize.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+			Visualize1.Transparency = 0
+			Visualize1.Material = Enum.Material.ForceField
+			Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+			Visualize1.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+		else
+			Visualize.Material = Enum.Material.ForceField
+			Visualize.Transparency = 1
+			Visualize1.Material = Enum.Material.ForceField
+			Visualize1.Transparency = 1
+		end	
+	end)
 end)
 
 initializate('nurysium_temp')
