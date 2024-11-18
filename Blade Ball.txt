@@ -116,8 +116,8 @@ local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubuserconte
 local Notification = NothingLibrary.Notification();
 
 Notification.new({
-	Title = "Notification",
-	Description = "Blade Ball",
+	Title = "Welcome!",
+	Description = "This is the VicoXNury script that we will develop",
 	Duration = 5,
 	Icon = "rbxassetid://8997385628"
 })
@@ -327,9 +327,9 @@ function resolve_parry_Remote()
     end
 end
 
-local aura_table = {
+local aura = {
 
-    canParry = true,
+    can_parry = true,
 
     is_Spamming = false,
 
