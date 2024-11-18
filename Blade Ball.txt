@@ -133,6 +133,8 @@ Notification.new({
 	Icon = "rbxassetid://8997385628"
 })
 
+while wait(2) do
+
 -- Warning as notification
 Notification.new({
 	Title = "Beta Version Warning",
@@ -368,11 +370,11 @@ end)
 
 ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
 
-    aura_table.hit_Count += 1
+    aura.hit_Count += 1
 
     task.delay(0.15, function()
 
-        aura_table.hit_Count -= 1
+        aura.hit_Count -= 1
 
     end)
 
@@ -380,11 +382,11 @@ end)
 
 workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
 
-    aura_table.hit_Count = 0
+    aura.hit_Count = 0
 
-    aura_table.is_ball_Warping = false
+    aura.is_ball_Warping = false
 
-    aura_table.is_Spamming = false
+    aura.is_Spamming = false
 
 end)
 
@@ -811,15 +813,6 @@ task.defer(function()
     end)
 end)
 
-
-ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
-	aura.hit_Count += 1
-
-	task.delay(0.185, function()
-		aura.hit_Count -= 1
-	end)
-end)
-
 task.spawn(function()
     local previousPosition = Vector3.zero  -- Awal yang aman untuk posisi
     local previousTime = tick()
@@ -1090,6 +1083,8 @@ Notification.new({
     Duration = 5,
     Icon = "rbxassetid://8997385628"
 })
+
+while wait(3) do
 
 -- Memulai proses inisialisasi
 local initializedData = initializate("nurysium_temp", {
