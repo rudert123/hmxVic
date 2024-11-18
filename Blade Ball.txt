@@ -855,7 +855,6 @@ task.spawn(function()
             end
         end
     end)
-end)
 	RunService.PreRender:Connect(function()
 		if not getgenv().aura_Enabled then
 			return
