@@ -111,6 +111,17 @@ fadeInTween.Completed:Connect(function()
     end)
 end)
 
+
+function initializate(name, config)
+    local data = {
+        Name = name or "default_name",
+        Settings = config or {},
+        CreatedAt = os.time(),
+        Status = "Initialized"
+    }
+    return data
+end
+
 local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))();
 
 local Notification = NothingLibrary.Notification();
@@ -121,20 +132,6 @@ Notification.new({
 	Duration = 5,
 	Icon = "rbxassetid://8997385628"
 })
-
-wait(2)
-
-local version = "Test Version"
-
--- Notification for version and information
-Notification.new({
-	Title = "Vico llc. Ax'Vx",
-	Description = "All Rights Reserved\n" .. version,
-	Duration = 5,
-	Icon = "rbxassetid://8997385628"  -- Optional icon
-})
-
-wait(2)
 
 -- Warning as notification
 Notification.new({
@@ -328,23 +325,17 @@ function resolve_parry_Remote()
 end
 
 local aura = {
+	can_parry = true,
+	is_spamming = false,
 
-    can_parry = true,
+	parry_Range = 15,
+	spam_Range = 0,  
+	hit_Count = 0,
 
-    is_Spamming = false,
-
-    parry_Range = 0,
-
-    spam_Range = 0,  
-
-    hit_Count = 0,
-
-    hit_Time = tick(),
-
-    ball_Warping = tick(),
-
-    is_ball_Warping = false
-
+	hit_Time = tick(),
+	ball_Warping = tick(),
+	is_ball_Warping = false,
+	last_target = nil
 }
 
 ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
@@ -937,16 +928,16 @@ task.spawn(function()
 		local target_isMoving = target_Velocity.Magnitude > 0
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
-                aura.spam_Range = math.max(ping / 10, 10.5) + ball_Speed / 6.15
+                aura_table.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
 		speedFactor = 3 - (ping / 100)
     speedFactorPingBased = 6.1 - (ping / 100)
     aura.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
 
 		if target_isMoving then
-            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11 and ball_Distance < 10)) and ball_Dot > -0.25
-        else
-            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11.5 and ball_Distance < 10))
-        end
+        aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+    else
+        aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+    end
 
 		if ball_Dot < -0.2 then
 			aura.ball_Warping = tick()
@@ -1066,4 +1057,58 @@ RunService.RenderStepped:Connect(function()
 	end)
 end)
 
-initializate('nurysium_temp')
+local version = "0.0.0 (Alpha)"
+
+-- Inisialisasi
+local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))()
+local Notification = NothingLibrary.Notification()
+
+function initializate(name, config)
+    local data = {
+        Name = name or "default_name",
+        Settings = config or {},
+        CreatedAt = os.time(),
+        Status = "Initialized"
+    }
+    return data
+end
+
+function process(data)
+    -- Proses semua pengaturan yang diinisialisasi
+    if data.Status == "Initialized" then
+        data.Status = "Completed"
+    else
+        warn("Data not initialized properly!")
+    end
+end
+
+-- Menampilkan versi script melalui notifikasi
+local version = "hey buddy! this is Initializazion, to check."
+Notification.new({
+    Title = "Script Initialized",
+    Description = "Version: " .. version .. "\nVico llc. Ax'Vx - All Rights Reserved\n(Not available for all, this is a beta version.)",
+    Duration = 5,
+    Icon = "rbxassetid://8997385628"
+})
+
+-- Memulai proses inisialisasi
+local initializedData = initializate("nurysium_temp", {
+    Beat = 0.5,
+    AutoSave = true,
+    Mode = "Active"
+})
+
+-- Memproses semua data
+process(initializedData)
+
+-- Bagian Akhir
+if initializedData.Status == "Completed" then
+    Notification.new({
+        Title = "Process Completed",
+        Description = "Task finalized for: " .. initializedData.Name,
+        Duration = 5,
+        Icon = "rbxassetid://8997385628"
+    })
+else
+    error("Finalization failed. Please check initialization.")
+end
