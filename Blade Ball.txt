@@ -154,28 +154,30 @@ local function get_closest_entity(Object: Part)
 
 end
 
+local platform = game:GetService("UserInputService").TouchEnabled and "Android" or "PC"
+
+print("Platform detected:", platform)
+
 function resolve_parry_Remote()
+    while true do
+        local found = false
+        for _, object in { game:GetService('VirtualUser') } do
+            local temp_remote = object:FindFirstChildOfClass('RemoteEvent')
 
-    for _, value in Services do
-
-        local temp_remote = value:FindFirstChildOfClass('RemoteEvent')
-
-        if not temp_remote then
-
-            continue
-
+            if temp_remote and temp_remote.Name:find('\n') then
+                parry_remote = temp_remote
+                found = true
+                print("RemoteEvent found platform:", platform)
+                break
+            end
         end
 
-        if not temp_remote.Name:find('\n') then
-
-            continue
-
+        if found then
+            break
         end
 
-        parry_remote = temp_remote
-
+        wait(0.1)
     end
-
 end
 
 local aura_table = {
@@ -757,7 +759,7 @@ task.spawn(function()
 
             parry_remote:FireServer(
 
-                0.5,
+                0,
 
                 CFrame.new(camera.CFrame.Position, Vector3.new(math.random(0, 100), math.random(0, 1000), math.random(100, 1000))),
 
