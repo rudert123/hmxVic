@@ -61,11 +61,11 @@ uiGradient.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0), Color3.fromRGB(50,
 uiGradient.Rotation = 45
 
 local textLabel = Instance.new("TextLabel")
-textLabel.Text = "Own : Rudert and Flezzpe"
-textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.Text = "XRudert XandX FlezzpeX"
+textLabel.TextColor3 = Color3.fromRGB(155, 155, 155)
 textLabel.TextSize = 50
 textLabel.TextStrokeTransparency = 0.6
-textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+textLabel.TextStrokeColor3 = Color3.fromRGB(1, 0, 0)
 textLabel.TextWrapped = true
 textLabel.Size = UDim2.new(0, 550, 0, 200)
 textLabel.Position = UDim2.new(0.5, -250, 0.5, -75)
