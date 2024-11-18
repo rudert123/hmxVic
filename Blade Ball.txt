@@ -415,7 +415,8 @@ Section:NewToggle({
 	Default = false,
 	Callback = function(toggled)
 		resolve_parry_Remote()
-		getgenv().auto_curve_Enabled = toggled
+		getgenv().auto_curve_Enabled
+= toggled
 	end    
 })
 
@@ -814,47 +815,55 @@ task.defer(function()
 end)
 
 task.spawn(function()
-    local previousPosition = Vector3.zero
-    local previousTime = tick()
+    local previousPosition = Vector3.zero  -- Posisi awal yang aman
+    local previousTime = tick()  -- Waktu awal (tick time)
 
-    RunService.Heartbeat:Connect(function()  -- Gunakan Heartbeat untuk pembaruan frame lebih cepat
-        if not getgenv().aura_Enabled then
+    RunService.Heartbeat:Connect(function()  -- Gunakan Heartbeat untuk pembaruan frame
+        if not getgenv().aura_Enabled then  -- Jika aura tidak aktif, keluar dari fungsi
             return
         end
 
-        if closest_Entity then
+        if closest_Entity then  -- Cek jika entitas terdekat ada
+            -- Pastikan entitas ada di workspace dan memiliki HumanoidRootPart
             local entity = workspace.Alive:FindFirstChild(closest_Entity.Name)
             if entity and entity:FindFirstChild("HumanoidRootPart") then
-                if aura.is_spamming then
+                if aura.is_spamming then  -- Pastikan aura sedang dalam keadaan spam
                     local currentPosition = entity.HumanoidRootPart.Position
-                    local currentTime = tick()
+                    local currentTime = tick()  -- Ambil waktu saat ini
 
-                    local deltaPosition = currentPosition - previousPosition
-                    local deltaTime = currentTime - previousTime
+                    local deltaPosition = currentPosition - previousPosition  -- Perubahan posisi
+                    local deltaTime = currentTime - previousTime  -- Perubahan waktu
 
+                    -- Kecepatan (stud per detik)
                     local speed = deltaTime > 0 and deltaPosition.Magnitude / deltaTime or 0
 
-                    local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
-                    local adjustedSpamDelay = ping < 50 and 0.02 or math.max(0.05, 0.5 - ping / 1000)
+                    -- Mengambil nilai ping dan menyesuaikan delay spam
+                    local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10  -- Ping dalam ms
+                    local adjustedSpamDelay = ping < 50 and 0.02 or math.max(0.05, 0.5 - ping / 1000)  -- Delay spam disesuaikan
 
+                    -- Cek jarak pemain dengan entitas
                     if local_player:DistanceFromCharacter(currentPosition) <= aura.spam_Range then
+                        -- Kirim perintah ke server
                         parry_remote:FireServer(
-                            speed,
-                            CFrame.new(camera.CFrame.Position, Vector3.zero),
-                            {[closest_Entity.Name] = currentPosition},
-                            {currentPosition.X, currentPosition.Y},
+                            speed,  -- Kecepatan entitas
+                            CFrame.new(camera.CFrame.Position, Vector3.zero),  -- CFrame kamera
+                            {[closest_Entity.Name] = currentPosition},  -- Posisi entitas
+                            {currentPosition.X, currentPosition.Y},  -- Posisi 2D
                             false
                         )
 
+                        -- Update posisi dan waktu untuk frame berikutnya
                         previousPosition = currentPosition
                         previousTime = currentTime
 
-                        task.wait(adjustedSpamDelay)  -- Percepat spam dengan delay yang lebih rendah
+                        -- Menunggu sesuai delay yang disesuaikan
+                        task.wait(adjustedSpamDelay)  -- Delay spam
                     end
                 end
             end
         end
-    end)
+    end)  -- End of RunService.Heartbeat connection
+end)  -- End of task.spawn function
 	RunService.PreRender:Connect(function()
 		if not getgenv().aura_Enabled then
 			return
@@ -985,9 +994,11 @@ end
 				RunService.PreRender:Wait()
 			until (tick() - aura.hit_Time) >= 1
 			    aura.can_parry = true
-		end)
-	end)
+
+     end)
+   end)
 end)
+
 
 initializate('nurysium_temp')
 
