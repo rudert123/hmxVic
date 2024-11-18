@@ -185,7 +185,11 @@ local closest_Entity = nil
 
 local parry_remote = nil
 
+getgenv().ai_Enabled = false
+
 getgenv().aura_Enabled = false
+
+getgenv().visualize_Enabled = false
 
 getgenv().hit_sound_Enabled = false
 
@@ -474,6 +478,14 @@ Section:NewToggle({
 	Default = false,
 	Callback = function(toggled)
 		getgenv().trail_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Ai Walk",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().ai_Enabled = toggled
 	end    
 })
 
