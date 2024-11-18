@@ -111,17 +111,6 @@ fadeInTween.Completed:Connect(function()
     end)
 end)
 
-
-function initializate(name, config)
-    local data = {
-        Name = name or "default_name",
-        Settings = config or {},
-        CreatedAt = os.time(),
-        Status = "Initialized"
-    }
-    return data
-end
-
 local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))();
 
 local Notification = NothingLibrary.Notification();
@@ -133,7 +122,7 @@ Notification.new({
 	Icon = "rbxassetid://8997385628"
 })
 
-while wait(2) do
+wait(2)
 
 -- Warning as notification
 Notification.new({
@@ -1084,7 +1073,7 @@ Notification.new({
     Icon = "rbxassetid://8997385628"
 })
 
-while wait(3) do
+wait(3)
 
 -- Memulai proses inisialisasi
 local initializedData = initializate("nurysium_temp", {
