@@ -910,7 +910,7 @@ task.spawn(function()
 		local target_isMoving = target_Velocity.Magnitude > 0
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
-                aura_table.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
+                aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
 		speedFactor = 3 - (ping / 100)
     speedFactorPingBased = 6.1 - (ping / 100)
     aura.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
