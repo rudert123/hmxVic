@@ -287,24 +287,67 @@ local function get_closest_entity(Object: Part)
 
 end
 
-local platform = game:GetService("UserInputService").TouchEnabled and "Android" or "PC"
-
-print("Platform detected:", platform)
-
-function resolve_parry_Remote()
-    local ReplicatedStorage = game:GetService('ReplicatedStorage')
+function find_RemoteEvent()
+    local services = {
+        game:GetService("ReplicatedStorage"),
+        game:GetService("Workspace"),
+        game:GetService("Workspace").Remotes,
+        game:GetService("ReplicatedFirst")
+    }
     
-    -- Cari di ReplicatedStorage atau service yang sesuai
-    for _, remote in ipairs(ReplicatedStorage.Remotes:GetChildren()) do
-        if remote:IsA('RemoteEvent') then
-            parry_remote = remote
-            print("RemoteEvent found platform:", platform)
-            return remote
+    local function searchRecursive(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("RemoteEvent") then
+                return child
+            end
+            
+            if child:IsA("Folder") or child:IsA("Model") then
+                local result = searchRecursive(child)
+                if result then return result end
+            end
+        end
+        return nil
+    end
+    
+    for _, service in ipairs(services) do
+        local remote = searchRecursive(service)
+        if remote then 
+            print("RemoteEvent found in:", service.Name)
+            return remote 
         end
     end
     
-    warn("No suitable RemoteEvent found")
+    warn("No RemoteEvent found in searched services")
     return nil
+end
+
+function resolve_parry_Remote()
+   local remote = find_RemoteEvent()
+   
+   if remote then
+       parry_remote = remote  -- Tambahkan sebagai callback global
+       print("RemoteEvent assigned to parry_remote:", remote)
+       return remote
+   else
+       -- Fallback mencari di lokasi spesifik
+       local fallback_locations = {
+           game.ReplicatedStorage.Remotes,
+           game.Workspace.Remotes
+       }
+       
+       for _, location in ipairs(fallback_locations) do
+           for _, child in ipairs(location:GetChildren()) do
+               if child:IsA("RemoteEvent") then
+                   parry_remote = child
+                   print("Fallback RemoteEvent found:", child)
+                   return child
+               end
+           end
+       end
+       
+       warn("Cannot find RemoteEvent")
+       return nil
+   end
 end
 
 local aura = {
