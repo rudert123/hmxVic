@@ -292,38 +292,19 @@ local platform = game:GetService("UserInputService").TouchEnabled and "Android" 
 print("Platform detected:", platform)
 
 function resolve_parry_Remote()
-    while true do
-        local found = false
-        local virtualUser = game:GetService('VirtualUser')
-        
-        -- Cari RemoteEvent dengan cara berbeda
-        for _, child in ipairs(virtualUser:GetChildren()) do
-            if child:IsA('RemoteEvent') then
-                local success, result = pcall(function()
-                    -- Coba akses nama RemoteEvent
-                    local remoteName = child.Name
-                    
-                    -- Tambahkan pengecekan tambahan
-                    if remoteName:find('\n') then
-                        parry_remote = child
-                        found = true
-                        print("RemoteEvent found platform:", platform)
-                        return true
-                    end
-                end)
-                
-                if success and found then
-                    break
-                end
-            end
+    local ReplicatedStorage = game:GetService('ReplicatedStorage')
+    
+    -- Cari di ReplicatedStorage atau service yang sesuai
+    for _, remote in ipairs(ReplicatedStorage.Remotes:GetChildren()) do
+        if remote:IsA('RemoteEvent') then
+            parry_remote = remote
+            print("RemoteEvent found platform:", platform)
+            return remote
         end
-
-        if found then
-            break
-        end
-       
-        wait(0.1)
     end
+    
+    warn("No suitable RemoteEvent found")
+    return nil
 end
 
 local aura = {
