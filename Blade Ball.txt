@@ -294,21 +294,34 @@ print("Platform detected:", platform)
 function resolve_parry_Remote()
     while true do
         local found = false
-        for _, object in { game:GetService('VirtualUser') } do
-            local temp_remote = object:FindFirstChildOfClass('RemoteEvent')
-
-            if temp_remote and temp_remote.Name:find('\n') then
-                parry_remote = temp_remote
-                found = true
-                print("RemoteEvent found platform:", platform)
-                break
+        local virtualUser = game:GetService('VirtualUser')
+        
+        -- Cari RemoteEvent dengan cara berbeda
+        for _, child in ipairs(virtualUser:GetChildren()) do
+            if child:IsA('RemoteEvent') then
+                local success, result = pcall(function()
+                    -- Coba akses nama RemoteEvent
+                    local remoteName = child.Name
+                    
+                    -- Tambahkan pengecekan tambahan
+                    if remoteName:find('\n') then
+                        parry_remote = child
+                        found = true
+                        print("RemoteEvent found platform:", platform)
+                        return true
+                    end
+                end)
+                
+                if success and found then
+                    break
+                end
             end
         end
 
         if found then
             break
         end
-
+       
         wait(0.1)
     end
 end
