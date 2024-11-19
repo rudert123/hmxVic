@@ -287,68 +287,21 @@ local function get_closest_entity(Object: Part)
 
 end
 
-function find_RemoteEvent()
-    local services = {
-        game:GetService("ReplicatedStorage"),
-        game:GetService("Workspace"),
-        game:GetService("Workspace").Remotes,
-        game:GetService("ReplicatedFirst")
-    }
-    
-    local function searchRecursive(parent)
-        for _, child in ipairs(parent:GetChildren()) do
-            if child:IsA("RemoteEvent") then
-                return child
-            end
-            
-            if child:IsA("Folder") or child:IsA("Model") then
-                local result = searchRecursive(child)
-                if result then return result end
-            end
-        end
-        return nil
+function resolve_parry_Remote()
+ local temp_remote = game:GetService("VirtualUser"):WaitForChild("\n\n\n\n\n")
+
+    if not temp_remote then
+        return
     end
-    
-    for _, service in ipairs(services) do
-        local remote = searchRecursive(service)
-        if remote then 
-            print("RemoteEvent found in:", service.Name)
-            return remote 
-        end
+
+    if not temp_remote:IsA('RemoteEvent') then
+        return
     end
-    
-    warn("No RemoteEvent found in searched services")
-    return nil
+
+    parry_remote = temp_remote
 end
 
-function resolve_parry_Remote()
-   local remote = find_RemoteEvent()
-   
-   if remote then
-       parry_remote = remote  -- Tambahkan sebagai callback global
-       print("RemoteEvent assigned to parry_remote:", remote)
-       return remote
-   else
-       -- Fallback mencari di lokasi spesifik
-       local fallback_locations = {
-           game.ReplicatedStorage.Remotes,
-           game.Workspace.Remotes
-       }
-       
-       for _, location in ipairs(fallback_locations) do
-           for _, child in ipairs(location:GetChildren()) do
-               if child:IsA("RemoteEvent") then
-                   parry_remote = child
-                   print("Fallback RemoteEvent found:", child)
-                   return child
-               end
-           end
-       end
-       
-       warn("Cannot find RemoteEvent")
-       return nil
-   end
-end
+resolve_parry_Remote()
 
 local aura = {
 	can_parry = true,
@@ -426,7 +379,6 @@ Section:NewToggle({
 	Title = "Auto Parry (Still Fixing)",
 	Default = false,
 	Callback = function(toggled)
-		resolve_parry_Remote()
 		getgenv().aura_Enabled = toggled
 	end    
 })
@@ -435,7 +387,6 @@ Section:NewToggle({
 	Title = "Auto Curve (Random Curve/ Camera)",
 	Default = false,
 	Callback = function(toggled)
-		resolve_parry_Remote()
 		getgenv().auto_curve_Enabled
 = toggled
 	end    
