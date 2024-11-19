@@ -340,44 +340,32 @@ local aura = {
 	last_target = nil
 }
 
-ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
+pcall(function()
+   ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
+       if getgenv().hit_sound_Enabled then
+           hit_Sound:Play()
+       end
 
-    if getgenv().hit_sound_Enabled then
+       if getgenv().hit_effect_Enabled then
+           local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
+           hit_effect.Parent = Nurysium_Util.getBall()
+           hit_effect:Emit(3)
 
-        hit_Sound:Play()
-
-    end
-
-    if getgenv().hit_effect_Enabled then
-
-        local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
-
-        hit_effect.Parent = Nurysium_Util.getBall()
-
-        hit_effect:Emit(3)
-
-        
-
-        task.delay(5, function()
-
-            hit_effect:Destroy()
-
-        end)
-
-    end
-
+           task.delay(5, function()
+               hit_effect:Destroy()
+           end)
+       end
+   end)
 end)
 
-ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
+pcall(function()
+   ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
+       aura.hit_Count += 1
 
-    aura.hit_Count += 1
-
-    task.delay(0.15, function()
-
-        aura.hit_Count -= 1
-
-    end)
-
+       task.delay(0.15, function()
+           aura.hit_Count -= 1
+       end)
+   end)
 end)
 
 workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
