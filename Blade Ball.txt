@@ -35,10 +35,6 @@ tween:Play()
 
 task.wait(5)  -- Force screen to appear for a minimum number of seconds
 
-if not game:IsLoaded() then
- game.Loaded:Wait()
-end
-
 screenGui:Destroy()
 
 --// Vico (Rudert) Recode
