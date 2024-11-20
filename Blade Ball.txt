@@ -285,6 +285,48 @@ local function get_closest_entity(Object)
 	end)
 end
 
+function getClosestEntityToMouse()
+	local closest = nil
+	local shortestDistance = math.huge
+	local mouse = game.Players.LocalPlayer:GetMouse()
+
+	-- Ensure workspace.Alive exists
+	if not workspace:FindFirstChild("Alive") then
+		return nil
+	end
+
+	-- Loop through all entities
+	for _, entity in pairs(workspace.Alive:GetChildren()) do
+		if entity:IsA("Model") then
+			local humanoidRootPart = entity:FindFirstChild("HumanoidRootPart")
+			if humanoidRootPart then
+				-- Convert world position to screen position
+				local screenPoint = camera:WorldToViewportPoint(humanoidRootPart.Position)
+				local distanceToMouse = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
+
+				-- Check if this is the closest entity so far
+				if distanceToMouse < shortestDistance then
+					closest = entity
+					shortestDistance = distanceToMouse
+				end
+			else
+				
+			end
+		else
+			
+		end
+	end
+
+	-- If no closest entity is found, warn the user
+	if not closest then
+		
+	else
+		
+	end
+
+	return closest
+end
+
 local platform = game:GetService("UserInputService").TouchEnabled and "Android" or "PC"
 
 print("Platform detected:", platform)
@@ -733,6 +775,22 @@ task.defer(function()
 end)
 
 --// AI
+task.defer(function()
+    local runService = game:GetService("RunService")
+    local Players = game:GetService("Players")
+
+    local function avoidWalls(startPos, targetPos)
+        local direction = (targetPos - startPos).Unit
+        local ray = Ray.new(startPos, direction * 10)
+        local hit, hitPosition = workspace:FindPartOnRay(ray, local_player.Character)
+
+        if hit then
+            -- Wall detected, adjust path
+            local adjustedDir = (targetPos - hitPosition).Unit + Vector3.new(0, 0, 0.5) -- Simple adjustment
+            return startPos + adjustedDir * 10
+        end
+return targetPos
+    end
 
 aivar = runService.Heartbeat:Connect(function()
         if not getgenv().ai_Enable or not workspace.Alive:FindFirstChild(local_player.Name) then
