@@ -1062,7 +1062,7 @@ Visualize1.Anchored = true
 Visualize1.CanCollide = false
 Visualize1.CastShadow = false
 Visualize1.Shape = Enum.PartType.Ball
-Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+Visualize1.Size = Vector3.new(aura_table.spam_Range, aura_table.spam_Range, aura_table.spam_Range)
 
 local Highlight1 = Instance.new("Highlight")
 Highlight1.Parent = Visualize1
@@ -1081,12 +1081,12 @@ task.spawn(function()
         if getgenv().visualize_Enabled then
             Visualize.Transparency = 0
             Visualize.Material = Enum.Material.ForceField
-            Visualize.Size = Vector3.new(aura.parry_Range, aura.parry_Range, aura.parry_Range)
+            Visualize.Size = Vector3.new(aura_table.parry_Range, aura_table.parry_Range, aura_table.parry_Range)
             Visualize.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
             
             Visualize1.Transparency = 0
             Visualize1.Material = Enum.Material.ForceField
-            Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+            Visualize1.Size = Vector3.new(aura_table.spam_Range, aura_table.spam_Range, aura_table.spam_Range)
             Visualize1.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
         else
             Visualize.Material = Enum.Material.ForceField
