@@ -362,11 +362,11 @@ end)
 
 ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
 
-    aura_table.hit_Count += 1
+    aura.hit_Count += 1
 
     task.delay(0.15, function()
 
-        aura_table.hit_Count -= 1
+        aura.hit_Count -= 1
 
     end)
 
