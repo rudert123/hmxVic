@@ -294,7 +294,7 @@ local platform = game:GetService("UserInputService").TouchEnabled and "Android" 
 
 print("Platform detected:", platform)
 
-function AutoParry.get_parry_remote()
+function get_parry_remote()
     while true do
         local found = false
         for _, object in { game:GetService('VirtualUser') } do
@@ -316,7 +316,7 @@ function AutoParry.get_parry_remote()
     end
 end
 
-AutoParry.get_parry_remote()
+get_parry_remote()
 
 local aura = {
 	can_parry = true,
