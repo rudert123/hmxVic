@@ -813,41 +813,27 @@ task.defer(function()
 end)
 
 task.spawn(function()
-    local previousPosition = Vector3.zero
-    local previousTime = tick()
+	RunService.Heartbeat:Connect(function()
+		if not getgenv().aura_Enabled then
+			return
+		end
 
-    RunService.Heartbeat:Connect(function()
-        if not getgenv().aura_Enabled then return end
-
-        if closest_Entity then
-            local entity = workspace.Alive:FindFirstChild(closest_Entity.Name)
-            if entity and entity:FindFirstChild("HumanoidRootPart") and aura.is_spamming then
-                local currentPosition = entity.HumanoidRootPart.Position
-                local currentTime = tick()
-
-                local deltaPosition = currentPosition - previousPosition
-                local deltaTime = currentTime - previousTime
-                local speed = deltaTime > 0 and deltaPosition.Magnitude / deltaTime or 0
-
-                local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
-                local adjustedSpamDelay = ping < 50 and 0.02 or math.max(0.05, 0.5 - ping / 1000)
-
-                if local_player:DistanceFromCharacter(currentPosition) <= aura.spam_Range then
-                    parry_remote:FireServer(
-                        speed,
-                        CFrame.new(camera.CFrame.Position, Vector3.zero),
-                        {[closest_Entity.Name] = currentPosition},
-                        {currentPosition.X, currentPosition.Y},
-                        false
-                    )
-
-                    previousPosition = currentPosition
-                    previousTime = currentTime
-                    task.wait(adjustedSpamDelay)
-                end
-            end
-        end
-    end)
+		if closest_Entity then
+			if workspace.Alive:FindFirstChild(closest_Entity.Name) then
+				if aura.is_spamming then
+					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then   
+						parry_remote:FireServer(
+							0,
+							CFrame.new(camera.CFrame.Position, Vector3.zero),
+							{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+							{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+							false
+						)
+					end
+				end
+			end
+		end
+	end)
 
 autoparryvar = RunService.Heartbeat:Connect(function()
         if not getgenv().aura_Enabled then return end
@@ -903,7 +889,7 @@ autoparryvar = RunService.Heartbeat:Connect(function()
         local speedFactorPingBased = 6.1 - (ping / 100)
         aura.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
 
-        aura.is_Spamming = aura.hit_Count > 1 or (
+        aura.is_spamming = aura.hit_Count > 1 or (
             target_Distance <= aura.spam_Range and 
             ball_Distance < 18 and 
             ball_Speed > 8 and 
