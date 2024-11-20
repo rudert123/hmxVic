@@ -1065,6 +1065,8 @@ end
 
         if ball_Distance <= aura_table.parry_Range and not aura_table.is_ball_Warping and ball_Speed > 0 and ball_Dot > 0.1 then
             local cf = camera.CFrame
+            local target_X = targetPosition.X
+            local target_Y = targetPosition.Y
 
             if getgenv().auto_curve_Enabled then
                 parry_remote:FireServer(
@@ -1075,7 +1077,7 @@ end
                         math.random(100, 1000)
                     )),
                     {[closest_Entity_To_mouse.Name] = target_Position},
-                    {target_Position.X, target_Position.Y},
+                    {target_X, target_Y},
                     false
                 )
             else
@@ -1084,7 +1086,7 @@ end
                     0,
                     CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
                     {[closest_Entity_To_mouse.Name] = target_Position},
-                    {target_Position.X, target_Position.Y},
+                    {target_X, target_Y},
                     false
                 )
             end
