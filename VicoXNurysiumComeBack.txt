@@ -147,6 +147,8 @@ spawn(function()
     end
 end)
 
+local visualizervar, autoparryvar
+
 local Stats = game:GetService('Stats')
 
 local Players = game:GetService('Players')
@@ -847,7 +849,7 @@ task.spawn(function()
         end
     end)
 
-    RunService.PreRender:Connect(function()
+autoparryvar = RunService.Heartbeat:Connect(function()
         if not getgenv().aura_Enabled then return end
 
         workspace:WaitForChild("Balls").ChildRemoved:Once(function()
@@ -932,7 +934,7 @@ task.spawn(function()
 
             if getgenv().auto_curve_Enabled then
                 parry_remote:FireServer(
-                    0,
+                    0.5,
                     CFrame.new(camera.CFrame.Position, Vector3.new(
                         math.random(-1000, 1000),
                         math.random(0, 1000),
@@ -1008,7 +1010,7 @@ local self = Nurysium_Util.getBall()
 	Highlight.OutlineColor = Color3.new(1, 1, 1)
 	
 task.spawn(function()
-RunService.RenderStepped:Connect(function()
+visualizervar = RunService.RenderStepped:Connect(function()
 		if getgenv().visualize_Enabled then
 			Visualize.Transparency = 0
 			Visualize.Material = Enum.Material.ForceField
@@ -1025,6 +1027,31 @@ RunService.RenderStepped:Connect(function()
 			Visualize1.Transparency = 1
 		end	
 	end)
+end)
+
+-- Define a safe disconnect function to avoid errors
+local function safeDisconnect(connection)
+    if connection and connection.Disconnect then
+        connection:Disconnect()
+    end
+end
+
+local function manageConnection(flag, varName, runServiceFunc)
+    if flag then
+        if not _G[varName] then
+            _G[varName] = RunService[runServiceFunc]:Connect(function()
+                -- Kode koneksi
+            end)
+        end
+    else
+        safeDisconnect(_G[varName])
+        _G[varName] = nil
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    manageConnection(visualize_Enabled, "visualizervar", "Heartbeat")
+    manageConnection(aura_Enabled, "autoparryvar", "Heartbeat")
 end)
 
 local version = "0.0.0 (Alpha)"
