@@ -1125,8 +1125,6 @@ end)
 
 local version = "0.0.0 (Alpha)"
 
--- Inisialisasi
-local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))()
 local Notification = NothingLibrary.Notification()
 
 function initializate(name, config)
@@ -1156,27 +1154,3 @@ Notification.new({
     Duration = 5,
     Icon = "rbxassetid://8997385628"
 })
-
-wait(3)
-
--- Memulai proses inisialisasi
-local initializedData = initializate("nurysium_temp", {
-    Beat = 0.5,
-    AutoSave = true,
-    Mode = "Active"
-})
-
--- Memproses semua data
-process(initializedData)
-
--- Bagian Akhir
-if initializedData.Status == "Completed" then
-    Notification.new({
-        Title = "Process Completed",
-        Description = "Task finalized for: " .. initializedData.Name,
-        Duration = 5,
-        Icon = "rbxassetid://8997385628"
-    })
-else
-    error("Finalization failed. Please check initialization.")
-end
