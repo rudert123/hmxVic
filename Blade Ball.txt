@@ -290,21 +290,33 @@ local function get_closest_entity(Object: Part)
 
 end
 
-function resolve_parry_Remote()
- local temp_remote = game:GetService('VirtualUser'):WaitForChild("\n\n\n\n\n")
+local platform = game:GetService("UserInputService").TouchEnabled and "Android" or "PC"
 
-    if not temp_remote then
-        return
+print("Platform detected:", platform)
+
+function AutoParry.get_parry_remote()
+    while true do
+        local found = false
+        for _, object in { game:GetService('VirtualUser') } do
+            local temp_remote = object:FindFirstChildOfClass('RemoteEvent')
+
+            if temp_remote and temp_remote.Name:find('\n') then
+                parry_remote = temp_remote
+                found = true
+                print("RemoteEvent found platform:", platform)
+                break
+            end
+        end
+
+        if found then
+            break
+        end
+
+        wait(0.1)
     end
-
-    if not temp_remote:IsA('RemoteEvent') then
-        return
-    end
-
-    parry_remote = temp_remote
 end
 
-resolve_parry_Remote()
+AutoParry.get_parry_remote()
 
 local aura = {
 	can_parry = true,
@@ -320,41 +332,43 @@ local aura = {
 	last_target = nil
 }
 
-pcall(function()
-   ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
-       if getgenv().hit_sound_Enabled then
-           hit_Sound:Play()
-       end
+ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
 
-       if getgenv().hit_effect_Enabled then
-           local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
-           hit_effect.Parent = Nurysium_Util.getBall()
-           hit_effect:Emit(3)
+    if getgenv().hit_sound_Enabled then
 
-           task.delay(5, function()
-               hit_effect:Destroy()
-           end)
-       end
-   end)
+        hit_Sound:Play()
+
+    end
+
+    if getgenv().hit_effect_Enabled then
+
+        local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
+
+        hit_effect.Parent = Nurysium_Util.getBall()
+
+        hit_effect:Emit(3)
+
+        
+
+        task.delay(5, function()
+
+            hit_effect:Destroy()
+
+        end)
+
+    end
+
 end)
 
-pcall(function()
-   ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
-       aura.hit_Count += 1
+ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
 
-       task.delay(0.15, function()
-           aura.hit_Count -= 1
-       end)
-   end)
-end)
+    aura_table.hit_Count += 1
 
-workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
+    task.delay(0.15, function()
 
-    aura.hit_Count = 0
+        aura_table.hit_Count -= 1
 
-    aura.is_ball_Warping = false
-
-    aura.is_Spamming = false
+    end)
 
 end)
 
