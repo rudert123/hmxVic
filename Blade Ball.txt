@@ -162,6 +162,8 @@ game:GetService('VirtualUser')
 
 local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
 
+local visualizervar, autospamvar, autoparryvar
+
 local local_player = Players.LocalPlayer
 
 local camera = workspace.CurrentCamera
@@ -215,7 +217,6 @@ local function getTrainingBall()
 		end
 	end
 end
-
 
 function SwordCrateManual()
 
@@ -814,7 +815,7 @@ task.spawn(function()
     local previousPosition = Vector3.zero
     local previousTime = tick()
 
-    RunService.Heartbeat:Connect(function()
+    autospamvar = RunService.Heartbeat:Connect(function()
         if not getgenv().aura_Enabled then
             aura_table.hit_Count = 0
             aura_table.is_Spamming = false
@@ -852,140 +853,150 @@ task.spawn(function()
                     end
                 end
             end
+        end
     end)
 
-RunService.PreRender:Connect(function()
-    if not getgenv().aura_Enabled or not (workspace.Alive:FindFirstChild(local_player.Name) or training_mode) then
-        aura_table.hit_Time = tick() * 10
-        aura_table.hit_Count = 0
-        aura_table.is_ball_Warping = false
-        aura_table.is_Spamming = false
-        aura_table.canParry = true
-        aura_table.last_target = nil
-        return
-    end
+local function linear_predict(a, b, time_volume)
+   time_volume = math.clamp(time_volume, 0, 1)
+   
+   -- Gunakan kurva sinus untuk prediksi lebih halus
+   local smoothed_time = math.sin(time_volume * math.pi / 2)
+   
+   return a + (b - a) * smoothed_time
+end
 
-    local ping = Stats.Network.ServerStatsItem["Data Ping"]:GetValue() / 10
-    local self
-
-    if training_mode then
-        self = getTrainingBall()
-    else
-        self = Nurysium_Util.getBall()
-    end
-
-    if not self then
-        aura_table.hit_Time = tick() * 10
-        aura_table.hit_Count = 0
-        aura_table.is_ball_Warping = false
-        aura_table.is_Spamming = false
-        aura_table.canParry = true
-        aura_table.last_target = nil
-        return
-    end
-
-    self:GetAttributeChangedSignal('target'):Once(function()
-        aura_table.canParry = true
-    end)
-
-    if self:GetAttribute('target') ~= local_player.Name or not aura_table.canParry then
-        return
-    end
-
-    self:GetAttributeChangedSignal('from'):Once(function()
-        aura_table.last_target = workspace.Alive:FindFirstChild(self:GetAttribute('from'))
-    end)
-
-    get_closest_entity(local_player.Character.PrimaryPart)
-
-    local player_Position = local_player.Character.PrimaryPart.Position
-    local ball_Position = self.Position
-    local ball_Velocity = self.AssemblyLinearVelocity
-
-    if self:FindFirstChild("zoomies") then
-        ball_Velocity = self.zoomies.VectorVelocity
-    end
-
-    local ball_Direction = (player_Position - ball_Position).Unit
-    local ball_Distance = (player_Position - ball_Position).Magnitude
-    local ball_Dot = ball_Direction:Dot(ball_Velocity.Unit)
-    local ball_Speed = ball_Velocity.Magnitude
-
-    -- Detect Ball
-    local ball_properties = {}
-    ball_properties.position = ball_Position
-    ball_properties.velocity = ball_Velocity
-    ball_properties.distance = (local_player.Character.PrimaryPart.Position - ball_properties.position).Magnitude
-    ball_properties.speed = ball_properties.velocity.Magnitude
-    ball_properties.direction = (local_player.Character.PrimaryPart.Position - ball_properties.position).Unit
-    ball_properties.dot = ball_properties.direction:Dot(ball_properties.velocity.Unit)
-    ball_properties.radians = math.rad(math.asin(ball_properties.dot))
-
-    if ball_properties.dot < -0.2 then
-        aura_table.ball_Warping = tick()
-    end
-
--- Anti-curve mechanism: Adjust for curving velocity
-    if ball_Speed < 25 or ball_Velocity.Y > 10 then
-        aura_table.hit_Time = tick() * 10
-        aura_table.hit_Count = 0
-        aura_table.is_ball_Warping = false
-        aura_table.is_Spamming = false
-        aura_table.can_parry = true
-        aura_table.last_target = nil
-    end
-
-    local player_Velocity = local_player.Character.HumanoidRootPart.AssemblyLinearVelocity
-    local player_isMoving = player_Velocity.Magnitude > 0
-    local ball_speed_Limited = math.min(ball_Speed / 1000, 0.1)
-    local ball_predicted_Distance = (ball_Distance - ping / 15.3) - (ball_Speed / 3.5)
-
-    local targetPosition = closest_Entity_To_mouse.HumanoidRootPart.Position
-    local target_Distance = local_player:DistanceFromCharacter(targetPosition)
-    local closest_target_Distance = local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position)
-    local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
-    local target_Direction = (local_player.Character.PrimaryPart.Position - closest_Entity.HumanoidRootPart.Position).Unit
-    local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
-    local target_isMoving = target_Velocity.Magnitude > 0
-    local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
-
-    aura_table.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
-    speedFactor = 3 - (ping / 100)
-    speedFactorPingBased = 6.1 - (ping / 100)
-    aura_table.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
-
-    if target_isMoving then
-        aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
-    else
-        aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
-    end
-
-    local velocity_angle = math.abs(math.acos(ball_Direction:Dot(ball_Velocity.Unit)))
-
-    if ball_Dot < -0.2 then
-        aura_table.ball_Warping = tick()
-    end
-
-    task.spawn(function()
-        if (tick() - aura_table.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance <= 10 then
+    autoparryvar = RunService.PreRender:Connect(function()
+        if not getgenv().aura_Enabled or not (workspace.Alive:FindFirstChild(local_player.Name) or training_mode) then
+            aura_table.hit_Time = tick() * 10
+            aura_table.hit_Count = 0
             aura_table.is_ball_Warping = false
+            aura_table.is_Spamming = false
+            aura_table.canParry = true
+            aura_table.last_target = nil
             return
         end
 
-        if aura_table.last_target then
-            if (ball_Position - aura_table.last_target.HumanoidRootPart.Position).Magnitude > 35.5 or target_Distance <= 12 then
-                aura_table.is_ball_Warping = false
-            end
+        local ping = Stats.Network.ServerStatsItem["Data Ping"]:GetValue() / 10
+        local self
+
+        if training_mode then
+            self = getTrainingBall()
+        else
+            self = Nurysium_Util.getBall()
         end
 
-        aura_table.is_ball_Warping = true
-    end)
+        if not self then
+            aura_table.hit_Time = tick() * 10
+            aura_table.hit_Count = 0
+            aura_table.is_ball_Warping = false
+            aura_table.is_Spamming = false
+            aura_table.canParry = true
+            aura_table.last_target = nil
+            return
+        end
 
-    -- Predict Ball
-    local predicted_ball_Position = linear_predict(ball_Position, ball_Position + ball_Velocity * (ping / 100), 0.5)
+        self:GetAttributeChangedSignal('target'):Once(function()
+            aura_table.canParry = true
+        end)
 
-    if ball_Distance <= aura_table.parry_Range and not aura_table.is_ball_Warping and ball_Speed > 0 and ball_Dot > 0.1 then
-        local cf = camera.CFrame
+        if self:GetAttribute('target') ~= local_player.Name or not aura_table.canParry then
+            return
+        end
+
+        self:GetAttributeChangedSignal('from'):Once(function()
+            aura_table.last_target = workspace.Alive:FindFirstChild(self:GetAttribute('from'))
+        end)
+
+        get_closest_entity(local_player.Character.PrimaryPart)
+
+        local player_Position = local_player.Character.PrimaryPart.Position
+        local ball_Position = self.Position
+        local ball_Velocity = self.AssemblyLinearVelocity
+
+        if self:FindFirstChild("zoomies") then
+            ball_Velocity = self.zoomies.VectorVelocity
+        end
+
+        local ball_Direction = (player_Position - ball_Position).Unit
+        local ball_Distance = (player_Position - ball_Position).Magnitude
+        local ball_Dot = ball_Direction:Dot(ball_Velocity.Unit)
+        local ball_Speed = ball_Velocity.Magnitude
+
+        -- Detect Ball
+        local ball_properties = {}
+        ball_properties.position = ball_Position
+        ball_properties.velocity = ball_Velocity
+        ball_properties.distance = (local_player.Character.PrimaryPart.Position - ball_properties.position).Magnitude
+        ball_properties.speed = ball_properties.velocity.Magnitude
+        ball_properties.direction = (local_player.Character.PrimaryPart.Position - ball_properties.position).Unit
+        ball_properties.dot = ball_properties.direction:Dot(ball_properties.velocity.Unit)
+        ball_properties.radians = math.rad(math.asin(ball_properties.dot))
+
+        if ball_properties.dot < -0.2 then
+            aura_table.ball_Warping = tick()
+        end
+
+        -- Anti-curve mechanism: Adjust for curving velocity
+        if ball_Speed < 25 or ball_Velocity.Y > 10 then
+            aura_table.hit_Time = tick() * 10
+            aura_table.hit_Count = 0
+            aura_table.is_ball_Warping = false
+            aura_table.is_Spamming = false
+            aura_table.can_parry = true
+            aura_table.last_target = nil
+        end
+
+        local player_Velocity = local_player.Character.HumanoidRootPart.AssemblyLinearVelocity
+        local player_isMoving = player_Velocity.Magnitude > 0
+        local ball_speed_Limited = math.min(ball_Speed / 1000, 0.1)
+        local ball_predicted_Distance = (ball_Distance - ping / 15.3) - (ball_Speed / 3.5)
+
+        local targetPosition = closest_Entity_To_mouse.HumanoidRootPart.Position
+        local target_Distance = local_player:DistanceFromCharacter(targetPosition)
+        local closest_target_Distance = local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position)
+        local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
+        local target_Direction = (local_player.Character.PrimaryPart.Position - closest_Entity.HumanoidRootPart.Position).Unit
+        local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
+        local target_isMoving = target_Velocity.Magnitude > 0
+        local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
+
+        aura_table.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
+        speedFactor = 3 - (ping / 100)
+        speedFactorPingBased = 6.1 - (ping / 100)
+        aura_table.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
+
+        if target_isMoving then
+            aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+        else
+            aura_table.is_Spamming = aura_table.hit_Count > 1 or (target_Distance <= aura_table.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+        end
+
+        local velocity_angle = math.abs(math.acos(ball_Direction:Dot(ball_Velocity.Unit)))
+
+        if ball_Dot < -0.2 then
+            aura_table.ball_Warping = tick()
+        end
+
+        task.spawn(function()
+            if (tick() - aura_table.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance <= 10 then
+                aura_table.is_ball_Warping = false
+                return
+            end
+
+            if aura_table.last_target then
+                if (ball_Position - aura_table.last_target.HumanoidRootPart.Position).Magnitude > 35.5 or target_Distance <= 12 then
+                    aura_table.is_ball_Warping = false
+                end
+            end
+
+            aura_table.is_ball_Warping = true
+        end)
+
+        -- Predict Ball
+        local predicted_ball_Position = linear_predict(ball_Position, ball_Position + ball_Velocity * (ping / 100), 0.5)
+
+        if ball_Distance <= aura_table.parry_Range and not aura_table.is_ball_Warping and ball_Speed > 0 and ball_Dot > 0.1 then
+            local cf = camera.CFrame
 
             if getgenv().auto_curve_Enabled then
                 parry_remote:FireServer(
@@ -1010,77 +1021,106 @@ RunService.PreRender:Connect(function()
                 )
             end
 
-        aura_table.hit_Count = aura_table.hit_Count + 1
-        task.delay(0.55 + (ping / 100), function()
-            aura_table.hit_Count = aura_table.hit_Count - 1
+            aura_table.hit_Count = aura_table.hit_Count + 1
+            task.delay(0.55 + (ping / 100), function()
+                aura_table.hit_Count = aura_table.hit_Count - 1
+            end)
+
+            aura_table.hit_Time = tick()
+            aura_table.canParry = false
+        end
+
+        task.spawn(function()
+            repeat
+                RunService.PreRender:Wait()
+            until (tick() - aura_table.hit_Time) >= 1
+            aura_table.canParry = true
         end)
-
-        aura_table.hit_Time = tick()
-        aura_table.canParry = false
-    end
-
-    task.spawn(function()
-        repeat
-            RunService.PreRender:Wait()
-        until (tick() - aura_table.hit_Time) >= 1
-        aura_table.canParry = true
     end)
-  end)
 end)
 
-initializate('nurysium_temp')
-
 local self = Nurysium_Util.getBall()
-	wait(0.1)
-	local Visualize = Instance.new("Part",workspace)
-	local Visualize1 = Instance.new("Part",workspace)
-	wait(0.5)
-	Visualize.Color = Color3.new(0, 0, 0)
-	Visualize.Material = Enum.Material.ForceField
-	Visualize.Transparency = 0.5
-	Visualize.Anchored = true
-	Visualize.CanCollide = false
-	Visualize.CastShadow = false
-	Visualize.Shape = Enum.PartType.Ball
-	Visualize.Size = Vector3.new(30,30,30)
-	Visualize1.Color = Color3.new(1, 0, 0)
-	Visualize1.Material = Enum.Material.ForceField
-	Visualize1.Transparency = 0.5
-	Visualize1.Anchored = true
-	Visualize1.CanCollide = false
-	Visualize1.CastShadow = false
-	Visualize1.Shape = Enum.PartType.Ball
-	Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+wait(0.1)
 
-	local Highlight1 = Instance.new("Highlight")
-	Highlight1.Parent = Visualize1
-	Highlight1.Enabled = true
-	Highlight1.FillTransparency = 0
-	Highlight1.OutlineColor = Color3.new(1, 1, 1)
-	local Highlight = Instance.new("Highlight")
-	Highlight.Parent = Visualize
-	Highlight.Enabled = true
-	Highlight.FillTransparency = 0
-	Highlight.OutlineColor = Color3.new(1, 1, 1)
-	
+local Visualize = Instance.new("Part", workspace)
+local Visualize1 = Instance.new("Part", workspace)
+wait(0.5)
+
+Visualize.Color = Color3.new(0, 0, 0)
+Visualize.Material = Enum.Material.ForceField
+Visualize.Transparency = 0.5
+Visualize.Anchored = true
+Visualize.CanCollide = false
+Visualize.CastShadow = false
+Visualize.Shape = Enum.PartType.Ball
+Visualize.Size = Vector3.new(30, 30, 30)
+
+Visualize1.Color = Color3.new(1, 0, 0)
+Visualize1.Material = Enum.Material.ForceField
+Visualize1.Transparency = 0.5
+Visualize1.Anchored = true
+Visualize1.CanCollide = false
+Visualize1.CastShadow = false
+Visualize1.Shape = Enum.PartType.Ball
+Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+
+local Highlight1 = Instance.new("Highlight")
+Highlight1.Parent = Visualize1
+Highlight1.Enabled = true
+Highlight1.FillTransparency = 0
+Highlight1.OutlineColor = Color3.new(1, 1, 1)
+
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = Visualize
+Highlight.Enabled = true
+Highlight.FillTransparency = 0
+Highlight.OutlineColor = Color3.new(1, 1, 1)
+
 task.spawn(function()
-RunService.RenderStepped:Connect(function()
-		if getgenv().visualize_Enabled then
-			Visualize.Transparency = 0
-			Visualize.Material = Enum.Material.ForceField
-			Visualize.Size = Vector3.new(aura.parry_Range, aura.parry_Range, aura.parry_Range)
-			Visualize.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
-			Visualize1.Transparency = 0
-			Visualize1.Material = Enum.Material.ForceField
-			Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
-			Visualize1.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
-		else
-			Visualize.Material = Enum.Material.ForceField
-			Visualize.Transparency = 1
-			Visualize1.Material = Enum.Material.ForceField
-			Visualize1.Transparency = 1
-		end	
-	end)
+    visualizervar = RunService.RenderStepped:Connect(function()
+        if getgenv().visualize_Enabled then
+            Visualize.Transparency = 0
+            Visualize.Material = Enum.Material.ForceField
+            Visualize.Size = Vector3.new(aura.parry_Range, aura.parry_Range, aura.parry_Range)
+            Visualize.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+            
+            Visualize1.Transparency = 0
+            Visualize1.Material = Enum.Material.ForceField
+            Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+            Visualize1.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+        else
+            Visualize.Material = Enum.Material.ForceField
+            Visualize.Transparency = 1
+            
+            Visualize1.Material = Enum.Material.ForceField
+            Visualize1.Transparency = 1
+        end	
+    end)
+end)
+
+local function safeDisconnect(connection)
+    if connection and connection.Disconnect then
+        connection:Disconnect()
+    end
+end
+
+local function manageConnection(flag, varName, runServiceFunc)
+    if flag then
+        if not _G[varName] then
+            _G[varName] = RunService[runServiceFunc]:Connect(function()
+                -- Kode koneksi
+            end)
+        end
+    else
+        safeDisconnect(_G[varName])
+        _G[varName] = nil
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    manageConnection(visualize_Enabled, "visualizervar", "Heartbeat")
+    manageConnection(auto_spam, "autospamvar", "Heartbeat")
+    manageConnection(aura_Enabled, "autoparryvar", "Heartbeat")
 end)
 
 local version = "0.0.0 (Alpha)"
