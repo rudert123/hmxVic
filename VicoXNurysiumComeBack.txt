@@ -887,7 +887,7 @@ autoparryvar = RunService.Heartbeat:Connect(function()
         aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
         local speedFactor = 3 - (ping / 100)
         local speedFactorPingBased = 6.1 - (ping / 100)
-        aura.parry_Range = math.max(math.max(ping, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
+        aura.parry_Range = math.max(math.max(ping, 4) + ball_Speed / speedFactor, speedFactorPingBased)
 
         aura.is_spamming = aura.hit_Count > 1 or (
             target_Distance <= aura.spam_Range and 
@@ -933,7 +933,7 @@ autoparryvar = RunService.Heartbeat:Connect(function()
             else
                 local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
                 parry_remote:FireServer(
-                    0,
+                    0.5,
                     CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
                     {[closest_Entity.Name] = target_Position},
                     {target_Position.X, target_Position.Y},
