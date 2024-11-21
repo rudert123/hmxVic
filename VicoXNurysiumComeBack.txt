@@ -868,27 +868,38 @@ task.defer(function()
 end)
 
 task.spawn(function()
-	RunService.Heartbeat:Connect(function()
-		if not getgenv().aura_Enabled then
-			return
-		end
+    RunService.Heartbeat:Connect(function()
+        if not getgenv().aura_Enabled then
+            return
+        end
 
-		if closest_Entity then
-			if workspace.Alive:FindFirstChild(closest_Entity.Name) then
-				if aura.is_spamming then
-					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then   
-						parry_remote:FireServer(
-							0,
-							CFrame.new(camera.CFrame.Position, Vector3.zero),
-							{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-							{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-							false
-						)
-					end
-				end
-			end
-		end
-	end)
+        if closest_Entity then
+            if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
+                if aura_table.is_Spamming then
+                    -- Cek apakah jarak cukup untuk melakukan spam
+                    if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then
+                        -- Panggil Remote untuk parry jika jarak cukup
+                        parry_remote:FireServer(
+                            0,
+                            CFrame.new(camera.CFrame.Position, Vector3.zero),
+                            {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+                            {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+                            false
+                        )
+
+                        -- Menampilkan notifikasi saat kondisi terpenuhi
+                        local Notification = NothingLibrary.Notification()
+                        Notification.new({
+                            Description = "AutoSpam is active and spamming!",
+                            Title = "AutoSpam Active",
+                            Duration = 3,
+                            Icon = "rbxassetid://7733993369"
+                        })
+                    end
+                end
+            end
+        end
+    end)
 
 autoparryvar = RunService.Heartbeat:Connect(function()
         if not getgenv().aura_Enabled then return end
