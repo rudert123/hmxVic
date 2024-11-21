@@ -207,15 +207,11 @@ local Services = {
 
 }
 
-function initializate(dataFolder_name)
-    -- Membuat folder dalam Workspace untuk menyimpan suara
-    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
+function initializate(dataFolder_name: string)
+    local nurysium_Data = Instance.new('Folder', game:GetService('CoreGui'))
     nurysium_Data.Name = dataFolder_name
-    -- Membuat objek Sound di dalam folder yang sudah dibuat
-    local hit_Sound = Instance.new('Sound', nurysium_Data)
-    -- Mengatur ID Sound (default)
-    hit_Sound.SoundId = 'rbxassetid://8632670510'
-    -- Mengatur volume
+
+    hit_Sound = Instance.new('Sound', nurysium_Data)
     hit_Sound.Volume = 5
 end
 
