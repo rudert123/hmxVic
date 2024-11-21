@@ -1,0 +1,1155 @@
+local Players = game:GetService("Players")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.BackgroundColor3 = Color3.fromRGB(0, 20, 40)
+textLabel.Font = Enum.Font.GothamMedium
+textLabel.TextColor3 = Color3.new(0.5, 0.5, 0.5)
+textLabel.Text = "Loading..."
+textLabel.TextSize = 28
+textLabel.Parent = screenGui
+
+local loadingRing = Instance.new("ImageLabel")
+loadingRing.Size = UDim2.new(0, 256, 0, 256)
+loadingRing.BackgroundTransparency = 1
+loadingRing.Image = "rbxassetid://4965945816"
+loadingRing.AnchorPoint = Vector2.new(0.5, 0.5)
+loadingRing.Position = UDim2.new(0.5, 0, 0.5, 0)
+loadingRing.Parent = screenGui
+
+-- Remove the default loading screen
+ReplicatedFirst:RemoveDefaultLoadingScreen()
+
+local tweenInfo = TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1)
+local tween = TweenService:Create(loadingRing, tweenInfo, {Rotation = 360})
+tween:Play()
+
+task.wait(5)  -- Force screen to appear for a minimum number of seconds
+
+screenGui:Destroy()
+
+--// Vico (Rudert) Recode
+print("Script not yet released and this is a tester, for testers.")
+wait(2)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "LoadingScreen"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.6
+frame.Parent = screenGui
+
+local uiGradient = Instance.new("UIGradient")
+uiGradient.Parent = frame
+uiGradient.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0), Color3.fromRGB(50, 50, 50))
+uiGradient.Rotation = 45
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Text = "XRudert XandX FlezzpeX"
+textLabel.TextColor3 = Color3.fromRGB(155, 155, 155)
+textLabel.TextSize = 50
+textLabel.TextStrokeTransparency = 0.6
+textLabel.TextStrokeColor3 = Color3.fromRGB(1, 0, 0)
+textLabel.TextWrapped = true
+textLabel.Size = UDim2.new(0, 550, 0, 200)
+textLabel.Position = UDim2.new(0.5, -250, 0.5, -75)
+textLabel.TextXAlignment = Enum.TextXAlignment.Center
+textLabel.TextYAlignment = Enum.TextYAlignment.Center
+textLabel.Parent = frame
+
+local border = Instance.new("UICorner")
+border.CornerRadius = UDim.new(0, 10)
+border.Parent = textLabel
+
+local shadow = Instance.new("Frame")
+shadow.Size = UDim2.new(1, 6, 1, 6)
+shadow.Position = UDim2.new(0, 3, 0, 3)
+shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+shadow.BackgroundTransparency = 0.5
+shadow.ZIndex = textLabel.ZIndex - 1
+shadow.Parent = textLabel
+
+local tweenService = game:GetService("TweenService")
+
+local fadeInTweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+local fadeInTween = tweenService:Create(textLabel, fadeInTweenInfo, {TextTransparency = 0, Position = UDim2.new(0.5, -250, 0.5, -75)})
+
+local moveUpTweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+local moveUpTween = tweenService:Create(textLabel, moveUpTweenInfo, {Position = UDim2.new(0.5, -250, 0.5, -150)})
+
+local fadeOutTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+local fadeOutTween = tweenService:Create(textLabel, fadeOutTweenInfo, {TextTransparency = 1})
+
+fadeInTween:Play()
+
+fadeInTween.Completed:Connect(function()
+    wait(1)
+    moveUpTween:Play()
+
+    moveUpTween.Completed:Connect(function()
+        fadeOutTween:Play()
+
+        fadeOutTween.Completed:Connect(function()
+            screenGui:Destroy()
+        end)
+    end)
+end)
+
+local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))();
+
+local Notification = NothingLibrary.Notification();
+
+Notification.new({
+	Title = "Welcome!",
+	Description = "This is the VicoXNury script that we will develop",
+	Duration = 5,
+	Icon = "rbxassetid://8997385628"
+})
+
+wait(2)
+
+-- Warning as notification
+Notification.new({
+	Title = "Beta Version Warning",
+	Description = "Not available for all. This is a beta version...",
+	Duration = 5,
+	Icon = "rbxassetid://8997385628",  -- Optional icon
+	Color = Color3.fromRGB(255, 0, 0)  -- Red color for warning
+})
+
+spawn(function()
+    while true do
+        wait(0.01)
+        if getgenv().ASC then
+            game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
+        end
+    end
+end)
+
+spawn(function()
+    while true do
+        wait(0.01)
+        if getgenv().AEC then
+            game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
+        end
+    end
+end)
+
+local visualizervar, autoparryvar
+
+local Stats = game:GetService('Stats')
+
+local Players = game:GetService('Players')
+
+local RunService = game:GetService('RunService')
+
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+
+local TweenService = game:GetService('TweenService')
+
+local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
+
+local local_player = Players.LocalPlayer
+
+local camera = workspace.CurrentCamera
+
+local nurysium_Data = nil
+
+local hit_Sound = nil
+
+local closest_Entity = nil
+
+local parry_remote = nil
+
+getgenv().ai_Enabled = false
+
+getgenv().aura_Enabled = false
+
+getgenv().auto_curve_Enabled = false
+
+getgenv().visualize_Enabled = false
+
+getgenv().hit_sound_Enabled = false
+
+getgenv().hit_effect_Enabled = false
+
+getgenv().night_mode_Enabled = false
+
+getgenv().trail_Enabled = false
+
+getgenv().self_effect_Enabled = false
+
+getgenv().kill_effect_Enabled = false
+
+getgenv().shaders_effect_Enabled = false
+
+getgenv().ai_Enabled = false
+
+getgenv().spectate_Enabled = false
+
+local Services = {
+
+	game:GetService('AdService'),
+
+	game:GetService('SocialService')
+
+}
+
+function SwordCrateManual()
+
+game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
+
+end
+
+function ExplosionCrateManual()
+
+game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
+
+end
+
+function SwordCrateAuto()
+
+while _G.AutoSword do
+
+game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
+
+wait(1)
+
+end
+
+end
+
+function ExplosionCrateAuto()
+
+while _G.AutoBoom do
+
+game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
+
+wait(1)
+
+end
+
+end
+
+function initializate(dataFolder_name)
+    -- Membuat folder dalam Workspace untuk menyimpan suara
+    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
+    nurysium_Data.Name = dataFolder_name
+
+    -- Membuat objek Sound di dalam folder yang sudah dibuat
+    local hit_Sound = Instance.new('Sound', nurysium_Data)
+
+    -- Mengatur ID Sound (default)
+    hit_Sound.SoundId = 'rbxassetid://8632670510'
+
+    -- Mengatur volume
+    hit_Sound.Volume = 5  -- Sesuaikan dengan kebutuhan
+
+    -- Memutar sound setelah inisialisasi
+    hit_Sound:Play()
+
+    return hit_Sound
+end
+
+local function get_closest_entity(Object: Part)
+
+    task.spawn(function()
+
+        local closest
+
+        local max_distance = math.huge
+
+        for index, entity in workspace.Alive:GetChildren() do
+
+            if entity.Name ~= Players.LocalPlayer.Name then
+
+                local distance = (Object.Position - entity.HumanoidRootPart.Position).Magnitude
+
+                if distance < max_distance then
+
+                    closest_Entity = entity
+
+                    max_distance = distance
+
+                end
+
+            end
+
+        end
+
+        return closest_Entity
+
+    end)
+
+end
+
+local platform = game:GetService("UserInputService").TouchEnabled and "Android" or "PC"
+
+print("Platform detected:", platform)
+
+function resolve_parry_Remote()
+    while true do
+        local found = false
+        for _, object in { game:GetService('VirtualUser') } do
+            local temp_remote = object:FindFirstChildOfClass('RemoteEvent')
+
+            if temp_remote and temp_remote.Name:find('\n') then
+                parry_remote = temp_remote
+                found = true
+                print("RemoteEvent found platform:", platform)
+                break
+            end
+        end
+
+        if found then
+            break
+        end
+
+        wait(0.1)
+    end
+end
+
+local aura = {
+	can_parry = true,
+	is_spamming = false,
+
+	parry_Range = 31,
+	spam_Range = 0,  
+	hit_Count = 0,
+
+	hit_Time = tick(),
+	ball_Warping = tick(),
+	is_ball_Warping = false,
+	last_target = nil
+}
+
+-- Fungsi untuk mendengarkan ParrySuccess dan memutar suara
+ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
+    if getgenv().hit_sound_Enabled and getgenv().hit_Sound then
+        getgenv().hit_Sound:Play()  -- Memutar suara saat parry success terjadi
+    end
+end)
+
+    if getgenv().hit_effect_Enabled then
+
+        local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
+
+        hit_effect.Parent = Nurysium_Util.getBall()
+
+        hit_effect:Emit(3)
+
+        
+
+        task.delay(5, function()
+
+            hit_effect:Destroy()
+
+        end)
+
+    end
+
+end)
+
+ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
+
+    aura.hit_Count += 1
+
+    task.delay(0.15, function()
+
+        aura.hit_Count -= 1
+
+    end)
+
+end)
+
+workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
+
+    aura.hit_Count = 0
+
+    aura.is_ball_Warping = false
+
+    aura.is_Spamming = false
+
+end)
+
+local Windows = NothingLibrary.new({
+	Title = "Vico X Nurysium",
+	Description = "will this be a bummer 😱",
+	Keybind = Enum.KeyCode.LeftControl,
+	Logo = 'http://www.roblox.com/asset/?id=18898582662'
+})
+
+-- Main Tab
+local TabFrame = Windows:NewTab({
+	Title = "Main",
+	Description = "Main Controls",
+	Icon = "rbxassetid://13014537525"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Main Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Auto Parry (Still Fixing)",
+	Default = false,
+	Callback = function(toggled)
+		resolve_parry_Remote()
+		getgenv().aura_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Auto Curve (Random Curve/ Camera)",
+	Default = false,
+	Callback = function(toggled)
+		resolve_parry_Remote()
+		getgenv().auto_curve_Enabled
+= toggled
+	end    
+})
+
+-- Menghubungkan dengan Toggle untuk mengaktifkan atau menonaktifkan suara
+Section:NewToggle({
+    Title = "Hit Sound",
+    Default = false,
+    Callback = function(toggled)
+        -- Menyimpan status apakah hit sound aktif
+        getgenv().hit_sound_Enabled = toggled
+
+        if toggled then
+            -- Memanggil fungsi untuk menginisialisasi suara saat toggle diaktifkan
+            if not getgenv().hit_Sound then
+                getgenv().hit_Sound = initializate('HitSoundFolder')
+            end
+        else
+            -- Jika toggle dimatikan, hentikan suara jika diperlukan
+            if getgenv().hit_Sound then
+                getgenv().hit_Sound:Stop()
+            end
+        end
+    end
+})
+
+-- Dropdown untuk memilih Hit Sound
+Section:NewDropdown({
+    Title = "Select Hit Sound",
+    Data = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
+    Default = "DC-15X",
+    Callback = function(selected)
+        -- Ganti suara tergantung pilihan dropdown
+        local soundId = ''
+        if selected == "DC-15X" then
+            soundId = 'rbxassetid://936447863'
+        elseif selected == "Neverlose" then
+            soundId = 'rbxassetid://8679627751'
+        elseif selected == "Minecraft" then
+            soundId = 'rbxassetid://8766809464'
+        elseif selected == "MinecraftHit2" then
+            soundId = 'rbxassetid://8458185621'
+        elseif selected == "Teamfortress Bonk" then
+            soundId = 'rbxassetid://8255306220'
+        elseif selected == "Teamfortress Bell" then
+            soundId = 'rbxassetid://2868331684'
+        end
+
+        -- Ganti suara jika hit_sound_Enabled aktif
+        if getgenv().hit_sound_Enabled then
+            -- Mengubah suara dengan ID yang baru
+            if getgenv().hit_Sound then
+                getgenv().hit_Sound.SoundId = soundId
+                getgenv().hit_Sound:Play()  -- Memainkan suara setelah mengganti ID
+            else
+                -- Inisialisasi suara jika belum ada
+                getgenv().hit_Sound = initializate('HitSoundFolder')
+                getgenv().hit_Sound.SoundId = soundId
+                getgenv().hit_Sound:Play()
+            end
+        end
+    end,
+})
+
+Section:NewToggle({
+	Title = "Spectate Ball",
+	Default = false,
+	Callback = function(toggled)
+		resolve_parry_Remote()
+		getgenv().spectate_Enabled = toggled
+	end    
+})
+
+-- Misc Tab
+local TabFrame = Windows:NewTab({
+	Title = "Misc",
+	Description = "Miscellaneous Features",
+	Icon = "rbxassetid://7733920317"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Misc Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Hit Effect",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().hit_effect_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Kill Effect",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().kill_effect_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Trail",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().trail_Enabled = toggled
+	end    
+})
+
+Section:NewToggle({
+	Title = "Ai Walk",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().ai_Enabled = toggled
+	end    
+})
+
+-- Visual Tab
+local TabFrame = Windows:NewTab({
+	Title = "Visual",
+	Description = "Visual Settings",
+	Icon = "rbxassetid://7733774602"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Visual Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Visualizer",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().visualize_Enabled = toggled
+	end
+})
+
+Section:NewButton({
+	Title = "Draggable Keystrokes (PC)",
+	Callback = function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/aXC5KJuj"))()
+	end    
+})
+
+Section:NewToggle({
+	Title = "Night Mode",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().night_mode_Enabled = toggled
+	end    
+})
+
+-- Client Tab
+local TabFrame = Windows:NewTab({
+	Title = "Client",
+	Description = "Client Performance",
+	Icon = "rbxassetid://7734053426"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Client Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewButton({
+	Title = "Anti Lag",
+	Callback = function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/1RfvPdwX"))()
+	end    
+})
+
+Section:NewButton({
+	Title = "FPS Boost",
+	Callback = function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/4HrJUmwd"))()
+	end    
+})
+
+-- Crates Tab
+local TabFrame = Windows:NewTab({
+	Title = "Crates",
+	Description = "Crate Purchases",
+	Icon = "rbxassetid://7733964370"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Crates Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+Section:NewButton({
+	Title = "Buy Sword Crate",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
+	end    
+})
+
+Section:NewButton({
+	Title = "Buy Explosion Crate",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalExplosionCrate)
+	end    
+})
+
+Section:NewToggle({
+	Title = "Auto Buy Sword Crate",
+	Default = false,
+	Callback = function(state)
+		getgenv().ASC = state
+	end    
+})
+
+Section:NewToggle({
+	Title = "Auto Buy Explosion Crate",
+	Default = false,
+	Callback = function(state)
+		getgenv().AEC = state
+	end    
+})
+
+--// kill effect
+
+function play_kill_effect(Part)
+    task.defer(function()
+        local bell = game:GetObjects("rbxassetid://17519762269")[1]
+
+        bell.Name = 'Yeat_BELL'
+        bell.Parent = workspace
+
+        bell.Position = Part.Position - Vector3.new(0, 20, 0)
+        bell:WaitForChild('Sound'):Play()
+
+        game:GetService("TweenService"):Create(bell, TweenInfo.new(0.85, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
+            Position = Part.Position + Vector3.new(0, 10, 0)
+        }):Play()
+
+        task.delay(5, function()
+            game:GetService("TweenService"):Create(bell, TweenInfo.new(1.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
+                Position = Part.Position + Vector3.new(0, 100, 0)
+            }):Play()
+        end)
+
+        task.delay(6, function()
+            bell:Destroy()
+        end)
+    end)
+end
+
+task.defer(function()
+    workspace.Alive.ChildRemoved:Connect(function(child)
+        if not workspace.Dead:FindFirstChild(child.Name) then
+            return
+        end
+
+        if getgenv().kill_effect_Enabled then
+            play_kill_effect(child.HumanoidRootPart)
+        end
+    end)
+end)
+
+--// self effect
+
+task.defer(function()
+    game:GetService("RunService").Heartbeat:Connect(function()
+
+        if not local_player.Character then
+            return
+        end
+
+        if getgenv().self_effect_Enabled then
+            local effect = game:GetObjects("rbxassetid://17519530107")[1]
+
+            effect.Name = 'nurysium_efx'
+
+            if local_player.Character.PrimaryPart:FindFirstChild('nurysium_efx') then
+                return
+            end
+            
+            effect.Parent = local_player.Character.PrimaryPart
+        else
+            
+            if local_player.Character.PrimaryPart:FindFirstChild('nurysium_efx') then
+                local_player.Character.PrimaryPart['nurysium_efx']:Destroy()
+            end
+        end
+
+    end)
+end)
+
+ task.defer(function()
+
+    game:GetService("RunService").Heartbeat:Connect(function()
+
+        if not local_player.Character then
+
+            return
+
+        end
+
+        if getgenv().trail_Enabled then
+
+            local trail = game:GetObjects("rbxassetid://17483658369")[1]
+
+            trail.Name = 'nurysium_fx'
+
+            if local_player.Character.PrimaryPart:FindFirstChild('nurysium_fx') then
+
+                return
+
+            end
+
+            local Attachment0 = Instance.new("Attachment", local_player.Character.PrimaryPart)
+
+            local Attachment1 = Instance.new("Attachment", local_player.Character.PrimaryPart)
+
+            Attachment0.Position = Vector3.new(0, -2.411, 0)
+
+            Attachment1.Position = Vector3.new(0, 2.504, 0)
+
+            trail.Parent = local_player.Character.PrimaryPart
+
+            trail.Attachment0 = Attachment0
+
+            trail.Attachment1 = Attachment1
+
+        else
+
+            
+
+            if local_player.Character.PrimaryPart:FindFirstChild('nurysium_fx') then
+
+                local_player.Character.PrimaryPart['nurysium_fx']:Destroy()
+
+            end
+
+        end
+
+    end)
+
+end)
+
+task.defer(function()
+
+    RunService.RenderStepped:Connect(function()
+
+        if getgenv().spectate_Enabled then
+
+            local self = Nurysium_Util.getBall()
+
+            if not self then
+
+                return
+
+            end
+
+            workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame:Lerp(CFrame.new(workspace.CurrentCamera.CFrame.Position, self.Position), 1.5)
+
+        end
+
+    end)
+
+end)
+
+task.defer(function()
+
+    while task.wait(1) do
+
+        if getgenv().night_mode_Enabled then
+
+            game:GetService("TweenService"):Create(game:GetService("Lighting"), TweenInfo.new(3), {ClockTime = 3.9}):Play()
+
+        else
+
+            game:GetService("TweenService"):Create(game:GetService("Lighting"), TweenInfo.new(3), {ClockTime = 13.5}):Play()
+
+        end
+
+    end
+
+end)
+
+--// AI
+
+task.defer(function()
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if getgenv().ai_Enabled and workspace.Alive:FindFirstChild(local_player.Character.Name) then
+            local self = Nurysium_Util.getBall()
+
+            if not self or not closest_Entity then
+                return
+            end
+
+            if not closest_Entity:FindFirstChild('HumanoidRootPart') then
+                walk_to(local_player.Character.HumanoidRootPart.Position + Vector3.new(math.sin(tick()) * math.random(35, 50), 0, math.cos(tick()) * math.random(35, 50)))
+                return
+            end
+
+            local ball_Position = self.Position
+            local ball_Speed = self.AssemblyLinearVelocity.Magnitude
+            local ball_Distance = local_player:DistanceFromCharacter(ball_Position)
+
+            local player_Position = local_player.Character.PrimaryPart.Position
+
+            local target_Position = closest_Entity.HumanoidRootPart.Position
+            local target_Distance = local_player:DistanceFromCharacter(target_Position)
+            local target_LookVector = closest_Entity.HumanoidRootPart.CFrame.LookVector
+
+            local resolved_Position = Vector3.zero
+
+            local target_Humanoid = closest_Entity:FindFirstChildOfClass("Humanoid")
+            if target_Humanoid and target_Humanoid:GetState() == Enum.HumanoidStateType.Jumping and local_player.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+                local_player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+
+            if (ball_Position - player_Position):Dot(local_player.Character.PrimaryPart.CFrame.LookVector) < -0.2 and tick() % 4 <= 2 then
+                return
+            end
+
+            if tick() % 4 <= 2 then
+                if target_Distance > 10 then
+                    resolved_Position = target_Position + (player_Position - target_Position).Unit * 8
+                else
+                    resolved_Position = target_Position + (player_Position - target_Position).Unit * 25
+                end
+            else
+                resolved_Position = target_Position - target_LookVector * (math.random(8.5, 13.5) + (ball_Distance / math.random(8, 20)))
+            end
+
+            if (player_Position - target_Position).Magnitude < 8 then
+                resolved_Position = target_Position + (player_Position - target_Position).Unit * 35
+            end
+
+            if ball_Distance < 8 then
+                resolved_Position = player_Position + (player_Position - ball_Position).Unit * 10
+            end
+
+            if aura.is_spamming then
+                resolved_Position = player_Position + (ball_Position - player_Position).Unit * 10
+            end
+
+            walk_to(resolved_Position + Vector3.new(math.sin(tick()) * 10, 0, math.cos(tick()) * 10))
+        end
+    end)
+end)
+
+task.spawn(function()
+	RunService.Heartbeat:Connect(function()
+		if not getgenv().aura_Enabled then
+			return
+		end
+
+		if closest_Entity then
+			if workspace.Alive:FindFirstChild(closest_Entity.Name) then
+				if aura.is_spamming then
+					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then   
+						parry_remote:FireServer(
+							0,
+							CFrame.new(camera.CFrame.Position, Vector3.zero),
+							{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+							{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+							false
+						)
+					end
+				end
+			end
+		end
+	end)
+
+autoparryvar = RunService.Heartbeat:Connect(function()
+        if not getgenv().aura_Enabled then return end
+
+        workspace:WaitForChild("Balls").ChildRemoved:Once(function()
+            aura.hit_Count = 0
+            aura.is_ball_Warping = false
+            aura.is_spamming = false
+            aura.can_parry = true
+            aura.last_target = nil
+        end)
+
+        local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 100
+        local self = Nurysium_Util.getBall()
+
+        if not self then return end
+
+        self:GetAttributeChangedSignal('target'):Once(function()
+            aura.can_parry = true
+        end)
+
+        self:GetAttributeChangedSignal('from'):Once(function()
+            aura.last_target = workspace.Alive:FindFirstChild(self:GetAttribute('from'))
+        end)
+
+        if self:GetAttribute('target') ~= local_player.Name or not aura.can_parry then return end
+
+        get_closest_entity(local_player.Character.PrimaryPart)
+
+        local player_Position = local_player.Character.PrimaryPart.Position
+        local player_Velocity = local_player.Character.HumanoidRootPart.AssemblyLinearVelocity
+        local player_isMoving = player_Velocity.Magnitude > 0
+
+        local ball_Position = self.Position
+        local ball_Velocity = self:FindFirstChild('zoomies') and self.zoomies.VectorVelocity or self.AssemblyLinearVelocity
+
+        local ball_Direction = (local_player.Character.PrimaryPart.Position - ball_Position).Unit
+        local ball_Distance = local_player:DistanceFromCharacter(ball_Position)
+        local ball_Dot = ball_Direction:Dot(ball_Velocity.Unit)
+        local ball_Speed = ball_Velocity.Magnitude
+        local ball_speed_Limited = math.min(ball_Speed / 1000, 0.1)
+
+        local target_Position = closest_Entity.HumanoidRootPart.Position
+        local target_Distance = local_player:DistanceFromCharacter(target_Position)
+        local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
+        local target_Direction = (local_player.Character.PrimaryPart.Position - target_Position).Unit
+        local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
+        local target_isMoving = target_Velocity.Magnitude > 0
+        local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
+
+        aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
+        local speedFactor = 3 - (ping / 100)
+        local speedFactorPingBased = 6.1 - (ping / 100)
+        aura.parry_Range = math.max(math.max(ping, 4) + ball_Speed / speedFactor, speedFactorPingBased)
+
+        aura.is_spamming = aura.hit_Count > 1 or (
+            target_Distance <= aura.spam_Range and 
+            ball_Distance < 18 and 
+            ball_Speed > 8 and 
+            ball_Velocity.Y > -50 and 
+            ball_Dot > 0.15
+        )
+
+        if ball_Dot < -0.2 then
+            aura.ball_Warping = tick()
+        end
+
+        task.spawn(function()
+            if (tick() - aura.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance < 10 then
+                aura.is_ball_Warping = false
+                return
+            end
+
+            if (ball_Position - aura.last_target.HumanoidRootPart.Position).Magnitude > 35.5 or target_Distance <= 12 then
+                aura.is_ball_Warping = false
+                return
+            end
+
+            aura.is_ball_Warping = true
+        end)
+
+        if ball_Distance <= aura.parry_Range and not aura.is_ball_Warping and ball_Dot > -0.1 then
+            local cf = camera.CFrame
+
+            if getgenv().auto_curve_Enabled then
+                parry_remote:FireServer(
+                    0.5,
+                    CFrame.new(camera.CFrame.Position, Vector3.new(
+                        math.random(-1000, 1000),
+                        math.random(0, 1000),
+                        math.random(100, 1000)
+                    )),
+                    {[closest_Entity.Name] = target_Position},
+                    {target_Position.X, target_Position.Y},
+                    false
+                )
+            else
+                local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+                parry_remote:FireServer(
+                    0.5,
+                    CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                    {[closest_Entity.Name] = target_Position},
+                    {target_Position.X, target_Position.Y},
+                    false
+                )
+            end
+
+            aura.can_parry = false
+            aura.hit_Time = tick()
+            aura.hit_Count += 1
+
+            task.delay(0.2, function()
+                aura.hit_Count -= 1
+            end)
+        end
+
+        task.spawn(function()
+            repeat
+                RunService.PreRender:Wait()
+            until (tick() - aura.hit_Time) >= 1
+            aura.can_parry = true
+        end)
+    end)
+end)
+
+
+initializate('nurysium_temp')
+
+local self = Nurysium_Util.getBall()
+	wait(0.1)
+	local Visualize = Instance.new("Part",workspace)
+	local Visualize1 = Instance.new("Part",workspace)
+	wait(0.5)
+	Visualize.Color = Color3.new(0, 0, 0)
+	Visualize.Material = Enum.Material.ForceField
+	Visualize.Transparency = 0.5
+	Visualize.Anchored = true
+	Visualize.CanCollide = false
+	Visualize.CastShadow = false
+	Visualize.Shape = Enum.PartType.Ball
+	Visualize.Size = Vector3.new(30,30,30)
+	Visualize1.Color = Color3.new(1, 0, 0)
+	Visualize1.Material = Enum.Material.ForceField
+	Visualize1.Transparency = 0.5
+	Visualize1.Anchored = true
+	Visualize1.CanCollide = false
+	Visualize1.CastShadow = false
+	Visualize1.Shape = Enum.PartType.Ball
+	Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+
+	local Highlight1 = Instance.new("Highlight")
+	Highlight1.Parent = Visualize1
+	Highlight1.Enabled = true
+	Highlight1.FillTransparency = 0
+	Highlight1.OutlineColor = Color3.new(1, 1, 1)
+	local Highlight = Instance.new("Highlight")
+	Highlight.Parent = Visualize
+	Highlight.Enabled = true
+	Highlight.FillTransparency = 0
+	Highlight.OutlineColor = Color3.new(1, 1, 1)
+	
+task.spawn(function()
+visualizervar = RunService.RenderStepped:Connect(function()
+		if getgenv().visualize_Enabled then
+			Visualize.Transparency = 0
+			Visualize.Material = Enum.Material.ForceField
+			Visualize.Size = Vector3.new(aura.parry_Range, aura.parry_Range, aura.parry_Range)
+			Visualize.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+			Visualize1.Transparency = 0
+			Visualize1.Material = Enum.Material.ForceField
+			Visualize1.Size = Vector3.new(aura.spam_Range, aura.spam_Range, aura.spam_Range)
+			Visualize1.CFrame = CFrame.new(local_player.Character.PrimaryPart.Position)
+		else
+			Visualize.Material = Enum.Material.ForceField
+			Visualize.Transparency = 1
+			Visualize1.Material = Enum.Material.ForceField
+			Visualize1.Transparency = 1
+		end	
+	end)
+end)
+
+-- Define a safe disconnect function to avoid errors
+local function safeDisconnect(connection)
+    if connection and connection.Disconnect then
+        connection:Disconnect()
+    end
+end
+
+local function manageConnection(flag, varName, runServiceFunc)
+    if flag then
+        if not _G[varName] then
+            _G[varName] = RunService[runServiceFunc]:Connect(function()
+                -- Kode koneksi
+            end)
+        end
+    else
+        safeDisconnect(_G[varName])
+        _G[varName] = nil
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    manageConnection(visualize_Enabled, "visualizervar", "Heartbeat")
+    manageConnection(aura_Enabled, "autoparryvar", "Heartbeat")
+end)
+
+local version = "0.0.0 (Alpha)"
+
+-- Inisialisasi
+local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/3345-c-a-t-s-u-s/NOTHING/main/source.lua'))()
+local Notification = NothingLibrary.Notification()
+
+function initializate(name, config)
+    local data = {
+        Name = name or "default_name",
+        Settings = config or {},
+        CreatedAt = os.time(),
+        Status = "Initialized"
+    }
+    return data
+end
+
+function process(data)
+    -- Proses semua pengaturan yang diinisialisasi
+    if data.Status == "Initialized" then
+        data.Status = "Completed"
+    else
+        warn("Data not initialized properly!")
+    end
+end
+
+-- Menampilkan versi script melalui notifikasi
+local version = "hey buddy! this is Initializazion, to check."
+Notification.new({
+    Title = "Script Initialized",
+    Description = "Version: " .. version .. "\nVico llc. Ax'Vx - All Rights Reserved\n(Not available for all, this is a beta version.)",
+    Duration = 5,
+    Icon = "rbxassetid://8997385628"
+})
+
+wait(3)
+
+-- Memulai proses inisialisasi
+local initializedData = initializate("nurysium_temp", {
+    Beat = 0.5,
+    AutoSave = true,
+    Mode = "Active"
+})
+
+-- Memproses semua data
+process(initializedData)
+
+-- Bagian Akhir
+if initializedData.Status == "Completed" then
+    Notification.new({
+        Title = "Process Completed",
+        Description = "Task finalized for: " .. initializedData.Name,
+        Duration = 5,
+        Icon = "rbxassetid://8997385628"
+    })
+else
+    error("Finalization failed. Please check initialization.")
+end
