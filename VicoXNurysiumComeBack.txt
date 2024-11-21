@@ -338,7 +338,7 @@ local aura = {
 -- Fungsi untuk mendengarkan ParrySuccess dan memutar suara
 ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
     if getgenv().hit_sound_Enabled and getgenv().hit_Sound then
-        getgenv().hit_Sound:Play()  -- Memutar suara saat parry success terjadi
+        hit_Sound:Play()
     end
 
     if getgenv().hit_effect_Enabled then
