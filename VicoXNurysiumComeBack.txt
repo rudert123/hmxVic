@@ -335,6 +335,11 @@ local aura = {
 	last_target = nil
 }
 
+ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
+	if getgenv().hit_sound_Enabled then
+		hit_Sound:Play()
+	end
+
     if getgenv().hit_effect_Enabled then
 
         local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
@@ -366,11 +371,6 @@ ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
     end)
 
 end)
-
-ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
-	if getgenv().hit_sound_Enabled then
-		hit_Sound:Play()
-	end
 
 workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
 
