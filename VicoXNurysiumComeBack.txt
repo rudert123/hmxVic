@@ -459,12 +459,12 @@ Section:NewDropdown({
             -- Mengubah suara dengan ID yang baru
             if getgenv().hit_Sound then
                 getgenv().hit_Sound.SoundId = soundId
-                getgenv().hit_Sound:Play()  -- Memainkan suara setelah mengganti ID
+                hit_Sound:Play()  -- Memainkan suara setelah mengganti ID
             else
                 -- Inisialisasi suara jika belum ada
                 getgenv().hit_Sound = initializate('HitSoundFolder')
                 getgenv().hit_Sound.SoundId = soundId
-                getgenv().hit_Sound:Play()
+                hit_Sound:Play()
             end
         end
     end,
