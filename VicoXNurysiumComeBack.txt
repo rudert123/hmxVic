@@ -939,12 +939,19 @@ autoparryvar = RunService.Heartbeat:Connect(function()
         local target_isMoving = target_Velocity.Magnitude > 0
         local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
-        aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1200)
-        local speedFactor = 3 - (ping / 100)
-        local speedFactorPingBased = 6.1 - (ping / 100)
-        aura.parry_Range = math.max(math.max(ping, 4) + ball_Speed / speedFactor, speedFactorPingBased)
+        aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 2000)
+        local mathUtils = {}
 
-        aura.is_spamming = aura.hit_Count > 1 or (
+function mathUtils.max(a, b)
+    return (a > b) and a or b
+end
+
+local PI = 3.14159265359  -- Tetapkan nilai tetap untuk π
+local speedFactor = 3 - (ping / 1000)
+local speedFactorPingBased = 6.1 - (ping / 1000)
+aura.parry_Range = mathUtils.max(math.max(ping, 4) + ball_Speed / speedFactor, speedFactorPingBased / PI)
+
+        aura.is_spamming = aura.hit_Count > 2 or (
             target_Distance <= aura.spam_Range and 
             ball_Distance < 18 and 
             ball_Speed > 8 and 
