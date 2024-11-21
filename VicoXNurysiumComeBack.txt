@@ -207,6 +207,18 @@ local Services = {
 
 }
 
+function initializate(dataFolder_name)
+    -- Membuat folder dalam Workspace untuk menyimpan suara
+    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
+    nurysium_Data.Name = dataFolder_name
+    -- Membuat objek Sound di dalam folder yang sudah dibuat
+    local hit_Sound = Instance.new('Sound', nurysium_Data)
+    -- Mengatur ID Sound (default)
+    hit_Sound.SoundId = 'rbxassetid://8632670510'
+    -- Mengatur volume
+    hit_Sound.Volume = 5
+end
+
 function SwordCrateManual()
 
 game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("PromptPurchaseCrate", workspace.Spawn.Crates.NormalSwordCrate)
@@ -243,25 +255,6 @@ end
 
 end
 
-function initializate(dataFolder_name)
-    -- Membuat folder dalam Workspace untuk menyimpan suara
-    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
-    nurysium_Data.Name = dataFolder_name
-
-    -- Membuat objek Sound di dalam folder yang sudah dibuat
-    local hit_Sound = Instance.new('Sound', nurysium_Data)
-
-    -- Mengatur ID Sound (default)
-    hit_Sound.SoundId = 'rbxassetid://8632670510'
-
-    -- Mengatur volume
-    hit_Sound.Volume = 5  -- Sesuaikan dengan kebutuhan
-
-    -- Memutar sound setelah inisialisasi
-    hit_Sound:Play()
-
-    return hit_Sound
-end
 
 local function get_closest_entity(Object: Part)
 
@@ -336,9 +329,9 @@ local aura = {
 }
 
 ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
-	if getgenv().hit_sound_Enabled then
-		hit_Sound:Play()
-	end
+    if getgenv().hit_sound_Enabled and hit_Sound then
+        hit_Sound:Play() 
+    end
 
     if getgenv().hit_effect_Enabled then
 
