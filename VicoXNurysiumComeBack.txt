@@ -243,18 +243,12 @@ end
 
 end
 
-function initializate(dataFolder_name:string)
-
+function initializate(dataFolder_name: string)
     local nurysium_Data = Instance.new('Folder', game:GetService('CoreGui'))
-
     nurysium_Data.Name = dataFolder_name
 
     hit_Sound = Instance.new('Sound', nurysium_Data)
-
-    hit_Sound.SoundId = 'rbxassetid://8632670510'
-
     hit_Sound.Volume = 5
-
 end
 
 local function get_closest_entity(Object: Part)
@@ -418,19 +412,27 @@ Section:NewToggle({
 	end    
 })
 
+-- Toggle untuk menghidupkan/mematikan Hit Sound
 Section:NewToggle({
 	Title = "Hit Sound",
 	Default = false,
 	Callback = function(toggled)
-		resolve_parry_Remote()
 		getgenv().hit_sound_Enabled = toggled
+		
+		-- Jika Hit Sound dihidupkan, set sound default
+		if toggled then
+			setHitSound('rbxassetid://936447863')  -- Default sound, misalnya DC-15X
+		end
 	end    
 })
 
-Section:Dropdown({
-    Title = "Select Sound",
-    List = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
+-- Dropdown untuk memilih Hit Sound
+Section:NewDropdown({
+    Title = "Select Hit Sound",
+    Data = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
+    Default = "DC-15X",
     Callback = function(selected)
+        -- Ganti suara tergantung pilihan dropdown
         if selected == "DC-15X" then
             setHitSound('rbxassetid://936447863')
         elseif selected == "Neverlose" then
@@ -444,9 +446,14 @@ Section:Dropdown({
         elseif selected == "Teamfortress Bell" then
             setHitSound('rbxassetid://2868331684')
         end
-        getgenv().hit_sound_Enabled = true
-    end
+        
+        -- Pastikan hit sound diaktifkan setelah memilih sound
+        if getgenv().hit_sound_Enabled then
+            getgenv().hit_sound_Enabled = true
+        end
+    end,
 })
+
 
 Section:NewToggle({
 	Title = "Spectate Ball",
