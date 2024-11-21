@@ -340,7 +340,6 @@ ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
     if getgenv().hit_sound_Enabled and getgenv().hit_Sound then
         getgenv().hit_Sound:Play()  -- Memutar suara saat parry success terjadi
     end
-end)
 
     if getgenv().hit_effect_Enabled then
 
