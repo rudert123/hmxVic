@@ -335,12 +335,6 @@ local aura = {
 	last_target = nil
 }
 
--- Fungsi untuk mendengarkan ParrySuccess dan memutar suara
-ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
-    if getgenv().hit_sound_Enabled and getgenv().hit_Sound then
-        hit_Sound:Play()
-    end
-
     if getgenv().hit_effect_Enabled then
 
         local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
@@ -372,6 +366,11 @@ ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
     end)
 
 end)
+
+ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
+	if getgenv().hit_sound_Enabled then
+		hit_Sound:Play()
+	end
 
 workspace:WaitForChild("Balls").ChildRemoved:Connect(function(child)
 
@@ -875,7 +874,7 @@ task.spawn(function()
 
         if closest_Entity then
             if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
-                if aura_table.is_Spamming then
+                if aura.is_spamming then
                     -- Cek apakah jarak cukup untuk melakukan spam
                     if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then
                         -- Panggil Remote untuk parry jika jarak cukup
