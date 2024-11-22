@@ -790,7 +790,6 @@ task.defer(function()
 end)
 
 task.spawn(function()
-
 RunService.Heartbeat:Connect(function()
 		if not getgenv().aura_Enabled then
 			return
