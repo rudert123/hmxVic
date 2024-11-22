@@ -872,7 +872,7 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
 
-local ping_threshold = math.clamp(ping / 10, 10.2, 23.5)
+local ping_threshold = math.clamp(ping / 10, 10, 15.5)
 
 aura.spam_Range = math.min(ping_threshold + ball_Speed / 2.3, 2300)
 
