@@ -244,11 +244,16 @@ end
 end
 
 function initializate(dataFolder_name: string)
-    local nurysium_Data = Instance.new('Folder', game:GetService('CoreGui'))
+    -- Membuat folder di Workspace untuk menyimpan suara
+    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
     nurysium_Data.Name = dataFolder_name
 
+    -- Membuat objek Sound di dalam folder
     hit_Sound = Instance.new('Sound', nurysium_Data)
     hit_Sound.Volume = 5
+
+    -- Mengembalikan folder jika diperlukan
+    return nurysium_Data
 end
 
 local function get_closest_entity(Object: Part)
@@ -415,8 +420,8 @@ Section:NewToggle({
 
 Section:NewDropdown({
     Title = "Select Hit Sound",
-    Data = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
-    Default = "DC-15X",
+    Data = {'DC-15X', 'Neverlose', 'Minecraft', 'MinecraftHit2', 'Teamfortress Bonk', "Teamfortress Bell'},
+    Default = 'DC-15X',
     Callback = function(selected)
         if selected == "DC-15X" then
             setHitSound('rbxassetid://936447863')
@@ -979,12 +984,13 @@ local self = Nurysium_Util.getBall()
 	Visualize.Material = Enum.Material.ForceField
 	Visualize.Transparency = 0.5
 	Visualize.Anchored = true
+        Visualize.Position = Vector3.new(0, 1000, 0)
 	Visualize.CanCollide = false
 	Visualize.CastShadow = false
 	Visualize.Shape = Enum.PartType.Ball
-	Visualize.Size = Vector3.new(30,30,30)
+	Visualize.Size = Vector3.new(1, 1, 1)
 	Visualize1.Color = Color3.new(1, 0, 0)
-	Visualize1.Material = Enum.Material.ForceField
+	Visualize1.Material = Enum.Material.SmoothPlastic
 	Visualize1.Transparency = 0.5
 	Visualize1.Anchored = true
 	Visualize1.CanCollide = false
