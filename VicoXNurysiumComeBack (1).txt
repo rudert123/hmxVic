@@ -413,9 +413,10 @@ Section:NewToggle({
 	end    
 })
 
-Section:Dropdown({
+Section:NewDropdown({
     Title = "Select Hit Sound",
     Data = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
+    Default = "DC-15X",
     Callback = function(selected)
         if selected == "DC-15X" then
             setHitSound('rbxassetid://936447863')
