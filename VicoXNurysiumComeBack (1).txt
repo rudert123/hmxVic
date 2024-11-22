@@ -251,9 +251,6 @@ function initializate(dataFolder_name: string)
     -- Membuat objek Sound di dalam folder
     hit_Sound = Instance.new('Sound', nurysium_Data)
     hit_Sound.Volume = 5
-
-    -- Mengembalikan folder jika diperlukan
-    return nurysium_Data
 end
 
 local function get_closest_entity(Object: Part)
@@ -975,13 +972,14 @@ end)
 
 initializate('nurysium_temp')
 
+
 local self = Nurysium_Util.getBall()
 	wait(0.1)
 	local Visualize = Instance.new("Part",workspace)
 	local Visualize1 = Instance.new("Part",workspace)
 	wait(0.5)
 	Visualize.Color = Color3.new(0, 0, 0)
-	Visualize.Material = Enum.Material.ForceField
+	Visualize.Material = Enum.Material.SmoothPlastic
 	Visualize.Transparency = 0.5
 	Visualize.Anchored = true
         Visualize.Position = Vector3.new(0, 1000, 0)
@@ -989,8 +987,9 @@ local self = Nurysium_Util.getBall()
 	Visualize.CastShadow = false
 	Visualize.Shape = Enum.PartType.Ball
 	Visualize.Size = Vector3.new(1, 1, 1)
+
 	Visualize1.Color = Color3.new(1, 0, 0)
-	Visualize1.Material = Enum.Material.SmoothPlastic
+	Visualize1.Material = Enum.Material.ForceField
 	Visualize1.Transparency = 0.5
 	Visualize1.Anchored = true
 	Visualize1.CanCollide = false
