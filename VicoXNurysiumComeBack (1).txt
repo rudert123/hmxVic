@@ -826,7 +826,7 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 			aura.last_target = nil
 		end)
 
-		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
+		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 1000
 		local self = Nurysium_Util.getBall()
 
 		if not self then
@@ -872,55 +872,12 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 		local target_isMoving = target_Velocity.Magnitude > 0
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
-		aura.spam_Range = math.clamp(
-    math.max(
-        math.max(ping / 8.5, 15) + ball_Speed / 7.5,  -- Menentukan dasar jarak spam berdasarkan kecepatan bola dan ping
-        8.4                                            
-    ),
-    10,  -- Jarak minimal untuk spam detection (mengatur batas minimum jarak spam)
-    1200 -- Jarak maksimal untuk spam detection (mengatur batas maksimal jarak spam)
-)
 
+local ping_threshold = math.clamp(ping / 10, 10, 16)
 
-local speedFactor = math.max(3 - (ping / 10), 0.1)  -- Pastikan bahwa speedFactor tidak terlalu kecil
-local speedFactorPingBased = math.max(6.1 - (ping / 10), 0.1)  -- Hal yang sama untuk speedFactorPingBased
+aura.spam_Range = ping_threshold + ball_Speed / 2.3
 
--- Perhitungan jarak dan waktu untuk parry
-local adjustedBallSpeed = math.abs(ball_Speed)  -- Pastikan kecepatan bola bernilai positif
-local timeToReachPlayer = ball_Distance / adjustedBallSpeed  -- Waktu yang dibutuhkan bola untuk sampai ke pemain
-
--- Gabungkan beberapa fungsi matematika untuk menghitung parry range
-aura.parry_Range = math.max(
-    math.min(  -- Batas maksimal range parry
-        math.max(
-            ping + (timeToReachPlayer * adjustedBallSpeed),  -- Menggabungkan ping dengan waktu tempuh bola
-            ball_Distance / 1.5  -- Jika bola semakin jauh, range juga harus lebih besar
-        ),
-        800  -- Batasi maksimal parry range
-    ),
-    10  -- Batasi minimal parry range agar tetap realistis
-)
-
--- Menggunakan tambahan fungsi math untuk penyesuaian yang lebih halus
-aura.parry_Range = math.min(
-    aura.parry_Range,
-    math.max(ball_Distance / 2, 1200)  -- Mengatur batas parry range berdasarkan jarak dan menambah batas atas
-)
-
--- Opsional: Menyesuaikan parry range dengan ball_Dot (arah bola)
-if ball_Dot < 0 then
-    -- Jika bola bergerak menjauh, perbesar parry range
-    aura.parry_Range = math.max(aura.parry_Range * 1.2, 50)  -- Memberikan efek pembesaran pada parry range
-end
-
--- Fungsi tambahan untuk menyesuaikan parry range lebih lanjut berdasarkan ping dan kecepatan bola
-aura.parry_Range = math.max(
-    aura.parry_Range,
-    math.min(
-        (ping / 5) + (ball_Speed / 6),  -- Menambahkan pengaruh ping dan kecepatan bola
-        600  -- Batasan atas untuk nilai parry range
-    )
-)
+aura.parry_Range = ping_threshold + ball_Speed / math.pi
 
 		if target_isMoving then
             aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11 and ball_Distance < 10)) and ball_Dot > -0.25
