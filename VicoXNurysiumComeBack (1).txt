@@ -243,24 +243,12 @@ end
 
 end
 
-function initializate(dataFolder_name)
-    -- Membuat folder dalam Workspace untuk menyimpan suara
-    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
+function initializate(dataFolder_name: string)
+    local nurysium_Data = Instance.new('Folder', game:GetService('CoreGui'))
     nurysium_Data.Name = dataFolder_name
 
-    -- Membuat objek Sound di dalam folder yang sudah dibuat
-    local hit_Sound = Instance.new('Sound', nurysium_Data)
-
-    -- Mengatur ID Sound (default)
-    hit_Sound.SoundId = 'rbxassetid://8632670510'
-
-    -- Mengatur volume
-    hit_Sound.Volume = 5  -- Sesuaikan dengan kebutuhan
-
-    -- Memutar sound setelah inisialisasi
-    hit_Sound:Play()
-
-    return hit_Sound
+    hit_Sound = Instance.new('Sound', nurysium_Data)
+    hit_Sound.Volume = 5
 end
 
 local function get_closest_entity(Object: Part)
@@ -335,13 +323,16 @@ local aura = {
 	last_target = nil
 }
 
--- Fungsi untuk mendengarkan ParrySuccess dan memutar suara
+function setHitSound(soundId)
+    hit_Sound.SoundId = soundId
+end
+
 ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
-    if getgenv().hit_sound_Enabled and getgenv().hit_Sound then
-        getgenv().hit_Sound:Play()  -- Memutar suara saat parry success terjadi
+    if getgenv().hit_sound_Enabled then
+        hit_Sound:Play()
     end
 
-    if getgenv().hit_effect_Enabled then
+if getgenv().hit_effect_Enabled then
 
         local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
 
@@ -422,64 +413,25 @@ Section:NewToggle({
 	end    
 })
 
--- Menghubungkan dengan Toggle untuk mengaktifkan atau menonaktifkan suara
-Section:NewToggle({
-    Title = "Hit Sound",
-    Default = false,
-    Callback = function(toggled)
-        -- Menyimpan status apakah hit sound aktif
-        getgenv().hit_sound_Enabled = toggled
-
-        if toggled then
-            -- Memanggil fungsi untuk menginisialisasi suara saat toggle diaktifkan
-            if not getgenv().hit_Sound then
-                getgenv().hit_Sound = initializate('HitSoundFolder')
-            end
-        else
-            -- Jika toggle dimatikan, hentikan suara jika diperlukan
-            if getgenv().hit_Sound then
-                getgenv().hit_Sound:Stop()
-            end
-        end
-    end
-})
-
--- Dropdown untuk memilih Hit Sound
-Section:NewDropdown({
+Section:Dropdown({
     Title = "Select Hit Sound",
     Data = {"DC-15X", "Neverlose", "Minecraft", "MinecraftHit2", "Teamfortress Bonk", "Teamfortress Bell"},
-    Default = "DC-15X",
     Callback = function(selected)
-        -- Ganti suara tergantung pilihan dropdown
-        local soundId = ''
         if selected == "DC-15X" then
-            soundId = 'rbxassetid://936447863'
+            setHitSound('rbxassetid://936447863')
         elseif selected == "Neverlose" then
-            soundId = 'rbxassetid://8679627751'
+            setHitSound('rbxassetid://8679627751')
         elseif selected == "Minecraft" then
-            soundId = 'rbxassetid://8766809464'
+            setHitSound('rbxassetid://8766809464')
         elseif selected == "MinecraftHit2" then
-            soundId = 'rbxassetid://8458185621'
+            setHitSound('rbxassetid://8458185621')
         elseif selected == "Teamfortress Bonk" then
-            soundId = 'rbxassetid://8255306220'
+            setHitSound('rbxassetid://8255306220')
         elseif selected == "Teamfortress Bell" then
-            soundId = 'rbxassetid://2868331684'
+            setHitSound('rbxassetid://2868331684')
         end
-
-        -- Ganti suara jika hit_sound_Enabled aktif
-        if getgenv().hit_sound_Enabled then
-            -- Mengubah suara dengan ID yang baru
-            if getgenv().hit_Sound then
-                getgenv().hit_Sound.SoundId = soundId
-                getgenv().hit_Sound:Play()  -- Memainkan suara setelah mengganti ID
-            else
-                -- Inisialisasi suara jika belum ada
-                getgenv().hit_Sound = initializate('HitSoundFolder')
-                getgenv().hit_Sound.SoundId = soundId
-                getgenv().hit_Sound:Play()
-            end
-        end
-    end,
+        getgenv().hit_sound_Enabled = true
+    end
 })
 
 Section:NewToggle({
