@@ -812,7 +812,7 @@ RunService.Heartbeat:Connect(function()
 		end
 	end)
 
-autoparryvar = 	RunService.PreRender:Connect(function()
+autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.First.Value,function()
 		if not getgenv().aura_Enabled then
 			return
 		end
@@ -872,11 +872,26 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
 
-local ping_threshold = math.clamp(ping / 10, 10, 15.5)
+local ping_threshold = math.clamp(ping / 10, 10, 16)
 
 aura.spam_Range = math.min(ping_threshold + ball_Speed / 2.3, 2300)
 
-aura.parry_Range = ping_threshold + ball_Speed / math.pi
+local num = 6.25 - (ping / 10)
+		if ball_Speed >= 250 then
+		num = 12.5 - (ping / 10)
+		elseif ball_Speed >= 500 then
+		num = 25 - (ping / 10)
+		elseif ball_Speed >= 750 then
+		num = 50 - (ping / 10)
+		end
+
+local speedFactor = 3.3
+		local speedFactorPingBased = 7.15
+		if ball_Speed >= 750 then
+			speedFactor = 2.55
+		end
+		aura.parry_Range = math.max(math.max(ping / 2, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
+
 
 		if target_isMoving then
         aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
