@@ -413,37 +413,6 @@ Section:NewToggle({
 	end    
 })
 
-Section:NewDropdown({
-    Title = "Select Hit Sound",
-    Data = {'DC-15X', 'Neverlose', 'Minecraft', 'MinecraftHit2', 'Teamfortress Bonk', "Teamfortress Bell'},
-    Default = 'DC-15X',
-    Callback = function(selected)
-        if selected == "DC-15X" then
-            setHitSound('rbxassetid://936447863')
-        elseif selected == "Neverlose" then
-            setHitSound('rbxassetid://8679627751')
-        elseif selected == "Minecraft" then
-            setHitSound('rbxassetid://8766809464')
-        elseif selected == "MinecraftHit2" then
-            setHitSound('rbxassetid://8458185621')
-        elseif selected == "Teamfortress Bonk" then
-            setHitSound('rbxassetid://8255306220')
-        elseif selected == "Teamfortress Bell" then
-            setHitSound('rbxassetid://2868331684')
-        end
-        getgenv().hit_sound_Enabled = true
-    end
-})
-
-Section:NewToggle({
-	Title = "Spectate Ball",
-	Default = false,
-	Callback = function(toggled)
-		resolve_parry_Remote()
-		getgenv().spectate_Enabled = toggled
-	end    
-})
-
 -- Misc Tab
 local TabFrame = Windows:NewTab({
 	Title = "Misc",
