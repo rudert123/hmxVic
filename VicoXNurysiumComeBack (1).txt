@@ -977,15 +977,13 @@ local self = Nurysium_Util.getBall()
 	local Visualize1 = Instance.new("Part",workspace)
 	wait(0.5)
 	Visualize.Color = Color3.new(0, 0, 0)
-	Visualize.Material = Enum.Material.SmoothPlastic
+	Visualize.Material = Enum.Material.ForceField
 	Visualize.Transparency = 0.5
 	Visualize.Anchored = true
-        Visualize.Position = Vector3.new(0, 1000, 0)
 	Visualize.CanCollide = false
 	Visualize.CastShadow = false
 	Visualize.Shape = Enum.PartType.Ball
-	Visualize.Size = Vector3.new(1, 1, 1)
-
+	Visualize.Size = Vector3.new(30,30,30)
 	Visualize1.Color = Color3.new(1, 0, 0)
 	Visualize1.Material = Enum.Material.ForceField
 	Visualize1.Transparency = 0.5
@@ -1025,7 +1023,6 @@ visualizervar = RunService.RenderStepped:Connect(function()
 		end	
 	end)
 end)
-
 -- Define a safe disconnect function to avoid errors
 local function safeDisconnect(connection)
     if connection and connection.Disconnect then
