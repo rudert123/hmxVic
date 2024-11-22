@@ -798,7 +798,7 @@ RunService.Heartbeat:Connect(function()
 		if closest_Entity then
 			if workspace.Alive:FindFirstChild(closest_Entity.Name) then
 				if aura.is_spamming then
-					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then   
+					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then
 						parry_remote:FireServer(
 							0.5,
 							CFrame.new(camera.CFrame.Position, Vector3.zero),
@@ -825,7 +825,7 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 			aura.last_target = nil
 		end)
 
-		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 1000
+		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
 		local self = Nurysium_Util.getBall()
 
 		if not self then
@@ -872,17 +872,18 @@ autoparryvar = 	RunService.PreRender:Connect(function()
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
 
-local ping_threshold = math.clamp(ping / 10, 10, 16)
+local ping_threshold = math.clamp(ping / 10, 10.2, 23.5)
 
-aura.spam_Range = ping_threshold + ball_Speed / 2.3
+aura.spam_Range = math.min(ping_threshold + ball_Speed / 2.3, 2300)
 
 aura.parry_Range = ping_threshold + ball_Speed / math.pi
 
 		if target_isMoving then
-            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11 and ball_Distance < 10)) and ball_Dot > -0.25
-        else
-            aura.is_spamming = (aura.hit_Count > 1 or (target_Distance < 11.5 and ball_Distance < 10))
-        end
+        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+    else
+        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+    end
+
 
 		if ball_Dot < -0.2 then
 			aura.ball_Warping = tick()
