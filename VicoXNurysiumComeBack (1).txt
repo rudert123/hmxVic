@@ -244,11 +244,9 @@ end
 end
 
 function initializate(dataFolder_name: string)
-    -- Membuat folder di Workspace untuk menyimpan suara
-    local nurysium_Data = Instance.new('Folder', game:GetService('Workspace'))
+    local nurysium_Data = Instance.new('Folder', game:GetService('CoreGui'))
     nurysium_Data.Name = dataFolder_name
 
-    -- Membuat objek Sound di dalam folder
     hit_Sound = Instance.new('Sound', nurysium_Data)
     hit_Sound.Volume = 5
 end
