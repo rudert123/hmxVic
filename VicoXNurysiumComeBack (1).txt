@@ -903,7 +903,7 @@ aura.parry_Range = math.max(
 
 -- Menggunakan tambahan fungsi math untuk penyesuaian yang lebih halus
 aura.parry_Range = math.min(
-    aura_table.parry_Range,
+    aura.parry_Range,
     math.max(ball_Distance / 2, 1200)  -- Mengatur batas parry range berdasarkan jarak dan menambah batas atas
 )
 
