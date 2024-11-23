@@ -383,39 +383,38 @@ local Windows = NothingLibrary.new({
 
 -- Main Tab
 local TabFrame = Windows:NewTab({
-	Title = "Main",
-	Description = "Main Controls",
-	Icon = "rbxassetid://13014537525"
+    Title = "Main",
+    Description = "Main Controls",
+    Icon = "rbxassetid://13014537525"
 })
 
 local Section = TabFrame:NewSection({
-	Title = "Main Section",
-	Icon = "rbxassetid://7743869054",
-	Position = "Left"
+    Title = "Main Section",
+    Icon = "rbxassetid://7743869054",
+    Position = "Left"
 })
 
 Section:NewToggle({
-	Title = "Auto Parry (Still Fixing)",
-	Default = false,
-	Callback = function(toggled)
-		resolve_parry_Remote()
-		getgenv().aura_Enabled = toggled
-	end    
+    Title = "Auto Parry (Still Fixing)",
+    Default = false,
+    Callback = function(toggled)
+        resolve_parry_Remote()
+        getgenv().aura_Enabled = toggled
+    end    
 })
 
 Section:NewToggle({
-	Title = "Auto Curve (Random Curve/ Camera)",
-	Default = false,
-	Callback = function(toggled)
-		resolve_parry_Remote()
-		getgenv().auto_curve_Enabled
-= toggled
-	end    
+    Title = "Auto Curve (Random Curve/ Camera)",
+    Default = false,
+    Callback = function(toggled)
+        resolve_parry_Remote()
+        getgenv().auto_curve_Enabled = toggled
+    end    
 })
 
 Section:NewDropdown({
     Title = "Select Hit Sound",
-    Data = {'DC-15X', 'Neverlose', 'Minecraft', 'MinecraftHit2', 'Teamfortress Bonk', "Teamfortress Bell"},
+    Data = {'DC-15X', 'Neverlose', 'Minecraft', 'MinecraftHit2', 'Teamfortress Bonk', 'Teamfortress Bell'},
     Default = 'DC-15X',
     Callback = function(selected)
         if selected == "DC-15X" then
@@ -433,7 +432,6 @@ Section:NewDropdown({
         end
         getgenv().hit_sound_Enabled = true
     end
-  end
 })
 
 -- Misc Tab
