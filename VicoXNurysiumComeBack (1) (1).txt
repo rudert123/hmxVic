@@ -507,8 +507,13 @@ Section:NewDropdown({
         -- Task deferred untuk mengaktifkan efek
         task.defer(function()
             game:GetService("RunService").Heartbeat:Connect(function()
+                if not local_player or not local_player.Character then
+                    return
+                end
 
-                if not local_player.Character then
+                local primaryPart = local_player.Character.PrimaryPart
+                if not primaryPart then
+                    warn("Character has no PrimaryPart.")
                     return
                 end
 
@@ -516,29 +521,30 @@ Section:NewDropdown({
                     local effect
 
                     -- Coba memuat efek dengan pencegahan error
-                    pcall(function()
-                        effect = game:GetObjects(selectedEffectID)[1]
+                    local success, result = pcall(function()
+                        return game:GetObjects(selectedEffectID)[1]
                     end)
 
-                    -- Validasi efek berhasil dimuat
-                    if not effect then
-                        warn("Failed to load effect: " .. selected)
+                    if not success or not result then
+                        warn("Failed to load effect: " .. tostring(selected))
                         return
                     end
 
+                    effect = result
                     effect.Name = 'nurysium_efx'
 
                     -- Cek apakah efek sudah ada
-                    if local_player.Character.PrimaryPart:FindFirstChild('nurysium_efx') then
+                    if primaryPart:FindFirstChild('nurysium_efx') then
                         return
                     end
 
                     -- Tambahkan efek ke karakter
-                    effect.Parent = local_player.Character.PrimaryPart
+                    effect.Parent = primaryPart
                 else
                     -- Hapus efek jika dinonaktifkan
-                    if local_player.Character.PrimaryPart:FindFirstChild('nurysium_efx') then
-                        local_player.Character.PrimaryPart['nurysium_efx']:Destroy()
+                    local existingEffect = primaryPart:FindFirstChild('nurysium_efx')
+                    if existingEffect then
+                        existingEffect:Destroy()
                     end
                 end
             end)
