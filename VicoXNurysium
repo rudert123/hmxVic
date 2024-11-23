@@ -887,27 +887,36 @@ task.defer(function()
 end)
 
 task.spawn(function()
-RunService.Heartbeat:Connect(function()
-		if not getgenv().aura_Enabled then
-			return
-		end
+    RunService.Heartbeat:Connect(function()
+        if not getgenv().aura_Enabled then
+            return
+        end
 
-		if closest_Entity then
-			if workspace.Alive:FindFirstChild(closest_Entity.Name) then
-				if aura.is_spamming then
-					if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then
-						parry_remote:FireServer(
-							0.5,
-							CFrame.new(camera.CFrame.Position, Vector3.zero),
-							{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-							{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-							false
-						)
-					end
-				end
-			end
-		end
-	end)
+        if closest_Entity then
+            if workspace.Alive:FindFirstChild(closest_Entity.Name) then
+                if aura.is_spamming then
+                    -- Cek jarak untuk menghindari spam yang berlebihan
+                    if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura.spam_Range then
+                        -- Gunakan delay untuk mengatur kecepatan spam dan menghindari duplikasi
+                        local function fireParry()
+                            parry_remote:FireServer(
+                                0,
+                                CFrame.new(camera.CFrame.Position, Vector3.zero),
+                                {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+                                {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+                                false
+                            )
+                        end
+
+                        -- Untuk mempercepat, kita bisa mengirim dua panggilan yang cepat namun terpisah
+                        fireParry()
+                        wait(0.05)  -- Menunggu 50ms untuk memberikan sedikit jeda antara dua panggilan
+                        fireParry()
+                    end
+                end
+            end
+        end
+    end)
 
 autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.First.Value,function()
 		if not getgenv().aura_Enabled then
@@ -971,34 +980,26 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 		local target_Dot = target_isMoving and math.max(target_Direction:Dot(target_Velocity.Unit), 0)
 
 
--- Fungsi untuk menyesuaikan ping agar tidak menyebabkan kesalahan perhitungan
-local function adjustPing(ping)
-    -- Sesuaikan ping untuk rentang yang lebih stabil (1-1000)
-    if ping < 100 then
-        -- Ping sangat rendah, beri faktor penyesuaian yang kecil
-        return ping / 10
-    elseif ping >= 100 and ping <= 1000 then
-        -- Ping normal (100 - 1000), langsung pakai
-        return ping / 10
-    else
-        -- Ping tinggi (> 1000), beri faktor penyesuaian yang lebih besar
-        return math.clamp(ping / 8, 10, 16.5)
-    end
-end
+-- Pastikan ping berada di rentang yang sesuai untuk threshold
+local ping_threshold = math.clamp(ping / 10, 10, 16.5)
 
--- Menggunakan fungsi adjustPing untuk menyesuaikan ping
-local ping_threshold = adjustPing(ping)
+-- Menyesuaikan spam_Range berdasarkan ping dan ball_Speed
+aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1700)
 
--- Menyesuaikan spam_Range dengan penyesuaian ping
-aura.spam_Range = math.clamp(math.max(math.max(ping_threshold / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1700)
-
--- Menyesuaikan parry_Range dengan penyesuaian ping
+-- Menyesuaikan parry_Range berdasarkan ping dan ball_Speed
 aura.parry_Range = ping_threshold + ball_Speed / math.pi
 
+-- Jika ping sangat tinggi, kita bisa memberikan tambahan agar sistem tetap bekerja dengan baik
+if ping > 1000 then
+    -- Misalnya menambahkan faktor tambahan jika ping sangat tinggi (1000+)
+    aura.parry_Range = aura.parry_Range + (ping / 1000)
+    aura.spam_Range = aura.spam_Range + (ping / 1000)
+end
+
 		if target_isMoving then
-        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+        aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
     else
-        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+        aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
     end
 
 
@@ -1039,7 +1040,7 @@ aura.parry_Range = ping_threshold + ball_Speed / math.pi
             else
                 local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
                 parry_remote:FireServer(
-                    0.5,
+                    0,
                     CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
                     {[closest_Entity.Name] = target_Position},
                     {target_Position.X, target_Position.Y},
