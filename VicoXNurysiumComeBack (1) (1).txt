@@ -481,7 +481,7 @@ Section:NewDropdown({
     Callback = function(selected)
         getgenv().self_effect_Enabled = true
 
-        -- Pilih efek berdasarkan dropdown
+        -- Mapping efek ke asset ID
         local effectMapping = {
             ["Magic Circle"] = "rbxassetid://17519530107",
             ["Sparkles"] = "rbxassetid://128567449",
@@ -495,10 +495,15 @@ Section:NewDropdown({
             ["Light Ring"] = "rbxassetid://7753778244"
         }
 
-        -- Aktifkan efek berdasarkan pilihan
+        -- Ambil ID efek berdasarkan pilihan
         local selectedEffectID = effectMapping[selected]
 
-        -- Mulai task deferred untuk mengaktifkan efek
+        if not selectedEffectID then
+            warn("Invalid effect selected.")
+            return
+        end
+
+        -- Task deferred untuk mengaktifkan efek
         task.defer(function()
             game:GetService("RunService").Heartbeat:Connect(function()
 
@@ -507,14 +512,27 @@ Section:NewDropdown({
                 end
 
                 if getgenv().self_effect_Enabled then
-                    local effect = game:GetObjects(selectedEffectID)[1]
+                    local effect
+
+                    -- Coba memuat efek dengan pencegahan error
+                    pcall(function()
+                        effect = game:GetObjects(selectedEffectID)[1]
+                    end)
+
+                    -- Validasi efek berhasil dimuat
+                    if not effect then
+                        warn("Failed to load effect: " .. selected)
+                        return
+                    end
 
                     effect.Name = 'nurysium_efx'
 
+                    -- Cek apakah efek sudah ada
                     if local_player.Character.PrimaryPart:FindFirstChild('nurysium_efx') then
                         return
                     end
 
+                    -- Tambahkan efek ke karakter
                     effect.Parent = local_player.Character.PrimaryPart
                 else
                     -- Hapus efek jika dinonaktifkan
@@ -522,7 +540,6 @@ Section:NewDropdown({
                         local_player.Character.PrimaryPart['nurysium_efx']:Destroy()
                     end
                 end
-
             end)
         end)
     end
