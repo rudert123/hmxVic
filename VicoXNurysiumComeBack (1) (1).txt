@@ -541,10 +541,9 @@ Section:NewDropdown({
 
                     effect = result
                     if effect then
-                        effect.Name = 'nurysium_efx'
-
+                        -- Tidak perlu menetapkan 'Name', langsung tambahkan efek ke PrimaryPart
                         -- Cek apakah efek sudah ada
-                        if primaryPart:FindFirstChild('nurysium_efx') then
+                        if primaryPart:FindFirstChild("nurysium_efx") then
                             return
                         end
 
@@ -555,7 +554,7 @@ Section:NewDropdown({
                     end
                 else
                     -- Hapus efek jika dinonaktifkan
-                    local existingEffect = primaryPart:FindFirstChild('nurysium_efx')
+                    local existingEffect = primaryPart:FindFirstChild("nurysium_efx")
                     if existingEffect then
                         existingEffect:Destroy()
                     end
@@ -564,6 +563,7 @@ Section:NewDropdown({
         end)
     end
 })
+
 
 Section:NewToggle({
 	Title = "Trail",
@@ -975,7 +975,7 @@ local baseMoveAmount = 0.5
 		local maxDistance = 1000
 		local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
 		aura.spam_delay = moveAmountNew
-		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + math.max(ping / 2, 3.5)
+		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + ping_threshold
 
 local num = 6.25 - (ping / 10)
 		if ball_Speed >= 250 then
