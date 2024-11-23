@@ -541,14 +541,18 @@ Section:NewDropdown({
 
                     effect = result
                     if effect then
-                        -- Tidak perlu menetapkan 'Name', langsung tambahkan efek ke PrimaryPart
-                        -- Cek apakah efek sudah ada
-                        if primaryPart:FindFirstChild("nurysium_efx") then
-                            return
-                        end
+                        -- Pastikan objek effect valid sebelum mencoba mengakses Parent
+                        if primaryPart then
+                            -- Cek apakah efek sudah ada
+                            if primaryPart:FindFirstChild("nurysium_efx") then
+                                return
+                            end
 
-                        -- Tambahkan efek ke karakter
-                        effect.Parent = primaryPart
+                            -- Tambahkan efek ke karakter
+                            effect.Parent = primaryPart
+                        else
+                            warn("PrimaryPart is nil, unable to attach effect.")
+                        end
                     else
                         warn("Effect is nil, skipping.")
                     end
@@ -563,7 +567,6 @@ Section:NewDropdown({
         end)
     end
 })
-
 
 Section:NewToggle({
 	Title = "Trail",
@@ -977,17 +980,17 @@ local baseMoveAmount = 0.5
 		aura.spam_delay = moveAmountNew
 		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + ping_threshold
 
-local num = 6.25 - (ping / 10)
+local num = 6.25 - ping_threshold
 		if ball_Speed >= 250 then
-		num = 12.5 - (ping / 10)
+		num = 12.5 - ping_threshold
 		elseif ball_Speed >= 500 then
-		num = 25 - (ping / 10)
+		num = 25 - ping_threshold
 		elseif ball_Speed >= 750 then
-		num = 50 - (ping / 10)
+		num = 50 - ping_threshold
 		end
 
-local speedFactor = 3.3
-		local speedFactorPingBased = 7.15
+local speedFactor = 3.3 - ping_threshold
+		local speedFactorPingBased = 7.15 - ping_threshold
 		if ball_Speed >= 750 then
 			speedFactor = 2.55
 		end
