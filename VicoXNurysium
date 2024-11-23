@@ -973,12 +973,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 
 local ping_threshold = math.clamp(ping / 10, 10, 16)
 
-local baseMoveAmount = 0.5
-		local moveAmount = baseMoveAmount * (1 / (closest_target_Distance + 0.01)) * 1000
-		local maxDistance = 1000
-		local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
-		aura.spam_delay = moveAmountNew
-		aura.spam_Range = math.clamp(math.min(moveAmount + (ball_Speed / 7.5, 8.4), (150 + moveAmount)) + math.max(ping / 2, 3.5), 25, 1200)
+aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1700)
 
 local num = 6.25 - (ping / 10)
 		if ball_Speed >= 250 then
