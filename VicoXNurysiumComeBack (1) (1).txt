@@ -522,7 +522,7 @@ Section:NewDropdown({
 
                     -- Coba memuat efek dengan pencegahan error
                     local success, result = pcall(function()
-                        return game:GetObjects(selectedEffectID)[1]
+                        return game:GetObjects(selectedEffectID)[1] -- Ambil objek pertama
                     end)
 
                     if not success or not result then
@@ -540,7 +540,7 @@ Section:NewDropdown({
                     end
 
                     effect = result
-                    if effect then
+                    if effect and typeof(effect) == "Instance" then
                         -- Pastikan objek effect valid sebelum mencoba mengakses Parent
                         if primaryPart then
                             -- Cek apakah efek sudah ada
@@ -554,7 +554,7 @@ Section:NewDropdown({
                             warn("PrimaryPart is nil, unable to attach effect.")
                         end
                     else
-                        warn("Effect is nil, skipping.")
+                        warn("Effect is not a valid instance, skipping.")
                     end
                 else
                     -- Hapus efek jika dinonaktifkan
@@ -567,6 +567,7 @@ Section:NewDropdown({
         end)
     end
 })
+
 
 Section:NewToggle({
 	Title = "Trail",
@@ -978,21 +979,21 @@ local baseMoveAmount = 0.5
 		local maxDistance = 1000
 		local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
 		aura.spam_delay = moveAmountNew
-		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + ping_threshold
+		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.5, 8.4), (150 + moveAmount)) + ping_threshold
 
 local num = 6.25 - ping_threshold
 		if ball_Speed >= 250 then
-		num = 12.5 - ping_threshold
+		num = 12.5 - (ping / 10)
 		elseif ball_Speed >= 500 then
-		num = 25 - ping_threshold
+		num = 25 - (ping / 10)
 		elseif ball_Speed >= 750 then
-		num = 50 - ping_threshold
+		num = 50 - (ping / 10)
 		end
 
-local speedFactor = 3.3 - ping_threshold
-		local speedFactorPingBased = 7.15 - ping_threshold
+local speedFactor = 3.3 - (ping / 10)
+		local speedFactorPingBased = 7.15 - (ping / 10)
 		if ball_Speed >= 750 then
-			speedFactor = 2.55
+			speedFactor = 2.55 - (ping / 10)
 		end
 		aura.parry_Range = math.max(math.max(ping / 2, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
 
