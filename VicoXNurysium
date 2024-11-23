@@ -910,7 +910,11 @@ task.spawn(function()
 
                         -- Untuk mempercepat, kita bisa mengirim dua panggilan yang cepat namun terpisah
                         fireParry()
-                        wait(0.05)  -- Menunggu 50ms untuk memberikan sedikit jeda antara dua panggilan
+                        wait(0.05) 
+                        fireParry()
+                        wait(0.05)
+                        fireParry()
+                        wait(0.05)  
                         fireParry()
                     end
                 end
