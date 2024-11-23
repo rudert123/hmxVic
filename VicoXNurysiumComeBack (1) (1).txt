@@ -163,6 +163,25 @@ local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA
 
 local local_player = Players.LocalPlayer
 
+-- Pastikan bahwa 'local_player' sudah valid
+if not local_player then
+    warn("LocalPlayer is nil!")
+    return
+end
+
+-- Pastikan Character juga valid
+if not local_player.Character then
+    warn("Character is nil!")
+    return
+end
+
+-- Pastikan PrimaryPart ada
+local primaryPart = local_player.Character.PrimaryPart
+if not primaryPart then
+    warn("PrimaryPart is nil!")
+    return
+end
+
 local camera = workspace.CurrentCamera
 
 local nurysium_Data = nil
@@ -981,7 +1000,7 @@ local baseMoveAmount = 0.5
 		aura.spam_delay = moveAmountNew
 		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.5, 8.4), (150 + moveAmount)) + ping_threshold
 
-local num = 6.25 - ping_threshold
+local num = 6.25 - (ping / 10)
 		if ball_Speed >= 250 then
 		num = 12.5 - (ping / 10)
 		elseif ball_Speed >= 500 then
@@ -990,10 +1009,10 @@ local num = 6.25 - ping_threshold
 		num = 50 - (ping / 10)
 		end
 
-local speedFactor = 3.3 - (ping / 10)
-		local speedFactorPingBased = 7.15 - (ping / 10)
+local speedFactor = 3.3
+		local speedFactorPingBased = 7.15
 		if ball_Speed >= 750 then
-			speedFactor = 2.55 - (ping / 10)
+			speedFactor = 2.55
 		end
 		aura.parry_Range = math.max(math.max(ping / 2, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
 
