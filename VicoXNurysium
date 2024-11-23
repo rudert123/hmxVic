@@ -1018,7 +1018,7 @@ end
             aura.is_ball_Warping = true
         end)
 
-		if ball_Distance <= aura_table.parry_Range and not aura_table.is_Spamming and not aura_table.is_ball_Warping then
+		if ball_Distance <= aura.parry_Range and not aura.is_Spamming and not aura.is_ball_Warping then
           
 			local cf = camera.CFrame
 
