@@ -554,7 +554,7 @@ Section:NewDropdown({
                             warn("PrimaryPart is nil, unable to attach effect.")
                         end
                     else
-                        warn("Effect is not a valid instance, skipping.")
+                        warn("Effect is not a valid instance: " .. tostring(effect))
                     end
                 else
                     -- Hapus efek jika dinonaktifkan
@@ -978,7 +978,7 @@ local baseMoveAmount = 0.5
 		local maxDistance = 1000
 		local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
 		aura.spam_delay = moveAmountNew
-		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + math.max(ping / 2, 3.5)
+		aura.spam_Range = math.clamp(math.min(moveAmount + (ball_Speed / 7.5, 8.4), (150 + moveAmount)) + math.max(ping / 2, 3.5), 25, 1200)
 
 local num = 6.25 - (ping / 10)
 		if ball_Speed >= 250 then
