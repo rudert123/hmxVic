@@ -984,8 +984,8 @@ local num = 6.25 - (ping / 10)
 		num = 50 - (ping / 10)
 		end
 
-local speedFactor = 3.3
-		local speedFactorPingBased = 7.15
+local speedFactor = 3
+		local speedFactorPingBased = 6.1
 		if ball_Speed >= 750 then
 			speedFactor = 2.55
 		end
