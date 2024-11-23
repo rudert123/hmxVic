@@ -321,6 +321,7 @@ local aura = {
 	hit_Time = tick(),
 	ball_Warping = tick(),
 	is_ball_Warping = false,
+        is_ball_Curving = false,
 	last_target = nil
 }
 
@@ -988,7 +989,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 local ping_threshold = math.clamp(ping / 10, 10, 16.5)
 
 -- Menyesuaikan spam_Range berdasarkan ping dan ball_Speed
-aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1700)
+aura.spam_Range = math.clamp(math.max(math.max(ping / 8, 14) + ball_Speed / 6.5, 7.1), 25, 1700)
 
 -- Menyesuaikan parry_Range berdasarkan ping dan ball_Speed
 aura.parry_Range = ping_threshold + ball_Speed / math.pi
@@ -1003,22 +1004,68 @@ end
 		if target_isMoving then
         aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
     else
-        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.20
+        aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.20
     end
 
-                if ball_Dot < -0.2 then
-            aura.ball_Warping = tick()
+         -- Fungsi utama untuk mendeteksi curve dan warping pada bola
+local last_Ball_Position = nil -- Untuk melacak posisi sebelumnya
+local curve_Threshold = -0.3 -- Ambang batas dot product untuk curve
+local warp_Speed_Threshold = 500 -- Ambang batas kecepatan untuk warping
+
+RunService.Heartbeat:Connect(function()
+    if not ball_Object or not ball_Object.Position then
+        return -- Jika bola tidak valid, keluar dari loop
+    end
+
+    -- Hitung dot product
+    local ball_Direction = last_Ball_Position and (ball_Object.Position - last_Ball_Position).Unit or Vector3.zero
+    local reference_Direction = Vector3.new(1, 0, 0) -- Contoh arah referensi (sesuaikan jika perlu)
+    local ball_Dot = ball_Direction:Dot(reference_Direction)
+
+    -- Hitung kecepatan bola
+    local ball_Speed = last_Ball_Position and (ball_Object.Position - last_Ball_Position).Magnitude / RunService.Heartbeat or 0
+
+    -- Deteksi Curve
+    if ball_Dot <= curve_Threshold then
+        aura.ball_Curving = tick()
+        aura.is_ball_Curving = true
+        print("Bola melakukan curve pada waktu:", aura.ball_Curving)
+    else
+        aura.is_ball_Curving = false
+    end
+
+    -- Deteksi Warping
+    if ball_Speed >= warp_Speed_Threshold then
+        aura.ball_Warping = tick()
+        aura.is_ball_Warping = true
+        print("Bola melakukan warping pada waktu:", aura.ball_Warping)
+    else
+        aura.is_ball_Warping = false
+    end
+
+    -- Simpan posisi bola untuk iterasi berikutnya
+    last_Ball_Position = ball_Object.Position
+end)
+
+-- Perhitungan tambahan untuk mendeteksi perubahan status bola (warping)
+task.spawn(function()
+    while true do
+        task.wait(0.1) -- Interval deteksi
+
+        if aura.is_ball_Warping and 
+           (tick() - aura.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited then
+            aura.is_ball_Warping = false
         end
 
-        task.spawn(function()
-            if (tick() - aura.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance < 10 then        aura.is_ball_Warping = false
-                return
-            end
-            aura.is_ball_Warping = true
-        end)
+        if aura.is_ball_Curving and 
+           (tick() - aura.ball_Curving) >= 0.2 then
+            aura.is_ball_Curving = false
+        end
+    end
+end)       
 
-		if ball_Distance <= aura.parry_Range and not aura.is_Spamming and not aura.is_ball_Warping then
-          
+		if ball_Distance <= aura.parry_Range and not aura.is_Spamming and not aura.is_ball_Warping and not aura.is_ball_Curving then
+
 			local cf = camera.CFrame
 
             if getgenv().auto_curve_Enabled then
