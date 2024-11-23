@@ -989,7 +989,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 local ping_threshold = math.clamp(ping / 10, 10, 16.5)
 
 -- Menyesuaikan spam_Range berdasarkan ping dan ball_Speed
-aura.spam_Range = math.clamp(math.max(math.max(ping / 8, 14) + ball_Speed / 6.5, 7.1), 25, 1700)
+aura.spam_Range = math.clamp(math.max(math.max(ping / 8, 14) + ball_Speed / 4.5, 5.9), 25, 1700)
 
 -- Menyesuaikan parry_Range berdasarkan ping dan ball_Speed
 aura.parry_Range = ping_threshold + ball_Speed / math.pi
@@ -1002,9 +1002,9 @@ if ping > 1000 then
 end
 
 		if target_isMoving then
-        aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
     else
-        aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.20
+        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.20
     end
 
          -- Fungsi utama untuk mendeteksi curve dan warping pada bola
