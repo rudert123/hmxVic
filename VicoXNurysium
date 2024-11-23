@@ -975,20 +975,8 @@ local ping_threshold = math.clamp(ping / 10, 10, 16.1)
 
 aura.spam_Range = math.clamp(math.max(math.max(ping / 8.5, 15) + ball_Speed / 7.5, 8.4), 25, 1700)
 
--- Mendapatkan nilai ping dan ball speed
-local num = 6.25 - (ping / 10)
-
--- Menyesuaikan num berdasarkan kecepatan bola
-if ball_Speed >= 250 then
-    num = 12.5 - (ping / 10)
-elseif ball_Speed >= 500 then
-    num = 25 - (ping / 10)
-elseif ball_Speed >= 750 then
-    num = 50 - (ping / 10)
-end
-
 -- Menyesuaikan parry_Range dengan num
-local parry_Range = ping_threshold + ball_Speed / math.pi - (ping / 10) + num
+local parry_Range = ping_threshold + ball_Speed / math.pi - (ping / 10)
 
 		if target_isMoving then
         aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
