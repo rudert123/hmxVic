@@ -527,19 +527,32 @@ Section:NewDropdown({
 
                     if not success or not result then
                         warn("Failed to load effect: " .. tostring(selected))
-                        return
+                        
+                        -- Gunakan efek default jika gagal
+                        success, result = pcall(function()
+                            return game:GetObjects("rbxassetid://17519530107")[1] -- Default: Magic Circle
+                        end)
+                        
+                        if not success or not result then
+                            warn("Failed to load default effect.")
+                            return
+                        end
                     end
 
                     effect = result
-                    effect.Name = 'nurysium_efx'
+                    if effect then
+                        effect.Name = 'nurysium_efx'
 
-                    -- Cek apakah efek sudah ada
-                    if primaryPart:FindFirstChild('nurysium_efx') then
-                        return
+                        -- Cek apakah efek sudah ada
+                        if primaryPart:FindFirstChild('nurysium_efx') then
+                            return
+                        end
+
+                        -- Tambahkan efek ke karakter
+                        effect.Parent = primaryPart
+                    else
+                        warn("Effect is nil, skipping.")
                     end
-
-                    -- Tambahkan efek ke karakter
-                    effect.Parent = primaryPart
                 else
                     -- Hapus efek jika dinonaktifkan
                     local existingEffect = primaryPart:FindFirstChild('nurysium_efx')
