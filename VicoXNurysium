@@ -1001,9 +1001,9 @@ if ping > 1000 then
 end
 
 		if target_isMoving then
-        aura.is_spamming = aura.hit_Count > 1 or ball_Distance < 13.5
-    else
         aura.is_spamming = aura.hit_Count > 2 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.15
+    else
+        aura.is_spamming = aura.hit_Count > 1 or (target_Distance <= aura.spam_Range and ball_Distance < 18 and ball_Speed > 8) and ball_Velocity.Y > -50 and ball_Dot > 0.20
     end
 
                 if ball_Dot < -0.2 then
