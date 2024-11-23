@@ -316,6 +316,7 @@ local aura = {
 	parry_Range = 31,
 	spam_Range = 0,  
 	hit_Count = 0,
+        spam_delay = 0,
 
 	hit_Time = tick(),
 	ball_Warping = tick(),
@@ -952,8 +953,8 @@ local baseMoveAmount = 0.5
 		local moveAmount = baseMoveAmount * (1 / (closest_target_Distance + 0.01)) * 1000
 		local maxDistance = 1000
 		local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
-		data.spam_delay = moveAmountNew
-		data.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + math.max(ping / 2, 3.5)
+		aura.spam_delay = moveAmountNew
+		aura.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + math.max(ping / 2, 3.5)
 
 local num = 6.25 - (ping / 10)
 		if ball_Speed >= 250 then
