@@ -940,6 +940,8 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 
 		local target_Position = closest_Entity.HumanoidRootPart.Position
 		local target_Distance = local_player:DistanceFromCharacter(target_Position)
+        local closest_target_Distance = local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position)
+
 		local target_distance_Limited = math.min(target_Distance / 10000, 0.1)
 		local target_Direction = (local_player.Character.PrimaryPart.Position - closest_Entity.HumanoidRootPart.Position).Unit
 		local target_Velocity = closest_Entity.HumanoidRootPart.AssemblyLinearVelocity
