@@ -162,11 +162,19 @@ local TweenService = game:GetService('TweenService')
 local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
 
 function FindBall()
-    for _, ball in ipairs(workspace:GetDescendants()) do
-        if ball:IsA("BasePart") and (ball.Name == "Ball" or ball:FindFirstChild("BallCore")) then
+    local balls = workspace:FindFirstChild("Balls") -- Pastikan folder "Balls" ada
+    if not balls then
+        warn("Folder 'Balls' tidak ditemukan!")
+        return nil
+    end
+
+    for _, ball in ipairs(balls:GetChildren()) do
+        if ball and ball:IsA("BasePart") and (ball.Name == "Ball" or ball:GetAttribute("realBall")) then
             return ball
         end
     end
+
+    warn("Bola tidak ditemukan!")
     return nil
 end
 
