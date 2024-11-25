@@ -161,6 +161,15 @@ local TweenService = game:GetService('TweenService')
 
 local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
 
+
+function getBall()
+    for index, ball in workspace:WaitForChild("Balls"):GetChildren() do
+        if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
+            return ball
+        end
+    end
+end
+
 local function FindBall()
     for _, obj in pairs(workspace:GetDescendants()) do
         -- Cek apakah objek bernama "BallSpawn" atau nama lainnya
@@ -968,7 +977,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 		end)
 
 		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
-		local self = ball
+		local self = FindBall() or getBall()
 
 		if not self then
                 print("[DEBUG] Ball not found because im cool")
@@ -1145,7 +1154,7 @@ end)
 initializate('nurysium_temp')
 
 
-local self = ball
+local self = FindBall() or getBall()
 	wait(0.1)
 	local Visualize = Instance.new("Part",workspace)
 	local Visualize1 = Instance.new("Part",workspace)
