@@ -968,7 +968,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 		end)
 
 		local ping = Stats.Network.ServerStatsItem['Data Ping']:GetValue() / 10
-		local self = FindBall()
+		local self = ball
 
 		if not self then
                 print("[DEBUG] Ball not found because im cool")
@@ -1145,7 +1145,7 @@ end)
 initializate('nurysium_temp')
 
 
-local self = FindBall()
+local self = ball
 	wait(0.1)
 	local Visualize = Instance.new("Part",workspace)
 	local Visualize1 = Instance.new("Part",workspace)
