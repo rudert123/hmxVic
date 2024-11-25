@@ -162,17 +162,10 @@ local TweenService = game:GetService('TweenService')
 local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
 
 
-function getBall()
-    for index, ball in workspace:WaitForChild("Balls"):GetChildren() do
-        if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
-            return ball
-        end
-    end
-end
-
+-- Fungsi pertama: Mencari bola menggunakan nama dan tipe objek tertentu
 local function FindBall()
     for _, obj in pairs(workspace:GetDescendants()) do
-        -- Cek apakah objek bernama "BallSpawn" atau nama lainnya
+        -- Cek apakah objek bernama "Ball" atau nama lainnya yang mengandung kata "ball"
         if obj and obj:IsA("BasePart") and (obj.Name == "Ball" or obj.Name == "BallSpawn" or string.find(obj.Name:lower(), "ball")) then
             return obj
         end
@@ -180,23 +173,45 @@ local function FindBall()
     return nil
 end
 
-local ball = FindBall()
+-- Fungsi kedua: Mencari bola dengan atribut "realBall"
+local function getBall()
+    for _, ball in pairs(workspace:GetChildren()) do
+        if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
+            return ball
+        end
+    end
+    return nil
+end
 
-if ball then
-    print("[DEBUG] Bola ditemukan! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
-else
-    print("[DEBUG] Bola tidak ditemukan!")
+-- Fungsi utama untuk mencari bola, mencoba FindBall terlebih dahulu, lalu getBall jika tidak ditemukan
+local function findBallWithBackup()
+    -- Pertama coba menggunakan FindBall()
+    local ball = FindBall()
+    if ball then
+        print("[DEBUG] Bola ditemukan oleh FindBall! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
+        return ball
+    end
+
+    -- Jika tidak ditemukan, coba dengan getBall()
+    print("[DEBUG] Bola tidak ditemukan dengan FindBall, mencoba getBall...")
+    ball = getBall()
+    if ball then
+        print("[DEBUG] Bola ditemukan oleh getBall! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
+        return ball
+    end
+
+    -- Jika keduanya gagal
+    print("[DEBUG] Bola tidak ditemukan.")
+    return nil
 end
 
 -- Loop pencarian bola
+local ball = findBallWithBackup()
+
 while not ball do
-    task.wait(0.1)
-    ball = FindBall()
-    if ball then
-        print("[DEBUG] Bola ditemukan! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
-    else
-        print("[DEBUG] Masih mencari bola...")
-    end
+    task.wait(0.1)  -- Tunggu sejenak sebelum mencoba lagi
+    print("[DEBUG] Masih mencari bola...")
+    ball = findBallWithBackup()
 end
 
 print("[DEBUG] Pencarian selesai. Bola ditemukan!")
