@@ -161,22 +161,36 @@ local TweenService = game:GetService('TweenService')
 
 local Nurysium_Util = loadstring(game:HttpGet('https://pastebin.com/raw/MfbsZuRA'))()
 
-function FindBall()
-    local balls = workspace:FindFirstChild("Balls") -- Pastikan folder "Balls" ada
-    if not balls then
-        warn("Folder 'Balls' tidak ditemukan!")
-        return nil
-    end
-
-    for _, ball in ipairs(balls:GetChildren()) do
-        if ball and ball:IsA("BasePart") and (ball.Name == "Ball" or ball:GetAttribute("realBall")) then
-            return ball
+local function FindBall()
+    for _, obj in pairs(workspace:GetDescendants()) do
+        -- Cek apakah objek bernama "BallSpawn" atau nama lainnya
+        if obj and obj:IsA("BasePart") and (obj.Name == "Ball" or obj.Name == "BallSpawn" or string.find(obj.Name:lower(), "ball")) then
+            return obj
         end
     end
-
-    warn("Bola tidak ditemukan!")
     return nil
 end
+
+local ball = FindBall()
+
+if ball then
+    print("[DEBUG] Bola ditemukan! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
+else
+    print("[DEBUG] Bola tidak ditemukan!")
+end
+
+-- Loop pencarian bola
+while not ball do
+    task.wait(0.1)
+    ball = FindBall()
+    if ball then
+        print("[DEBUG] Bola ditemukan! Nama: " .. ball.Name .. " Lokasi: " .. tostring(ball.Position))
+    else
+        print("[DEBUG] Masih mencari bola...")
+    end
+end
+
+print("[DEBUG] Pencarian selesai. Bola ditemukan!")
 
 local local_player = Players.LocalPlayer
 
@@ -957,6 +971,7 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 		local self = FindBall()
 
 		if not self then
+                print("[DEBUG] Ball not found because im cool")
 			return
 		end
 
