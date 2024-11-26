@@ -304,19 +304,19 @@ print("Platform detected:", platform)
 function resolve_parry_Remote()
     while true do
         local found = false
-        for _, object in { game:GetService('VirtualUser') } do
-            local temp_remote = object:FindFirstChildOfClass('RemoteEvent')
-
-            if temp_remote and temp_remote.Name:find('\n') then
+        -- Mencari RemoteEvent di dalam AnimationFromVideoCreatorService
+        local animation_service = game:GetService("AnimationFromVideoCreatorService")
+        if animation_service then
+            local temp_remote = animation_service:FindFirstChild("\n")
+            
+            if temp_remote and temp_remote:IsA("RemoteEvent") then
                 parry_remote = temp_remote
                 found = true
-                print("RemoteEvent found platform:", platform)
+                print("RemoteEvent found in AnimationFromVideoCreatorService with name '\\n'")
                 break
             end
-        end
-
-        if found then
-            break
+        else
+            print("AnimationFromVideoCreatorService not found.")
         end
 
         wait(0.1)
