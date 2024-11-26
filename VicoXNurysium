@@ -171,9 +171,17 @@ function checkBallsProximity()
             end
         end
     end
+    return nil -- Pastikan fungsi mengembalikan nil jika tidak ada bola ditemukan
 end
 
-local realBallAttribute = ball:GetAttribute("realBall")
+local realBallAttribute
+local ball = checkBallsProximity()
+
+if ball then
+    realBallAttribute = ball:GetAttribute("realBall")
+else
+    warn("No valid ball found or ball does not have 'realBall' attribute.")
+end
 
 local local_player = Players.LocalPlayer
 
