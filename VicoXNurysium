@@ -966,11 +966,11 @@ autoparryvar = 	RunService:BindToRenderStep("Auto Parry",Enum.RenderPriority.Fir
 			return
 		end
 
-		self:GetAttributeChangedSignal('target'):Once(function()
+		self:GetAttribute('target'):Once(function()
 			aura.can_parry = true
 		end)
 
-		self:GetAttributeChangedSignal('from'):Once(function()
+		self:GetAttribute('from'):Once(function()
 			aura.last_target = workspace.Alive:FindFirstChild(self:GetAttribute('from'))
 		end)
 
